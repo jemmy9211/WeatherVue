@@ -1,27 +1,31 @@
 <script>
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer,LMarker } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 import axios from 'axios'
+import NavBar from './NavBar.vue';
+
 const url = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=CWA-FAC637E3-79B2-4800-B15D-9E19F7BB350B';
+
 export default {
   components: {
-        LMap,
-        LTileLayer,
-        LMarker,
+    LMap,
+    LTileLayer,
+    LMarker,
+    NavBar
   },
-  props:['nowdata'],
+  props: ['nowdata'],
   data() {
     return {
       zoom: 11,
       lat: '',
       lon: '',
       sname: '',
-      wdata:[],
-      MaxT:[],
-      MinT:[],
-      PoPL:[],
-      Wx:[],
-      totaldata:[]
+      wdata: [],
+      MaxT: [],
+      MinT: [],
+      PoPL: [],
+      Wx: [],
+      totaldata: []
     };
   },
   created(){
@@ -55,38 +59,33 @@ export default {
 </script>
 
 <template>
-  <nav class="navbar p-3 text-primary-emphasis bg-light bg-opacity-75 sticky-top">
-      <div class="container-fluid">
-        <router-link class="navbar-brand" to="/"><h5><i class="bi bi-umbrella-fill"></i> Weather App using Vue</h5></router-link>
-        <div class="btn-group btn-group-sm border border-dark border-3">
-          <router-link type="button" class="btn btn-outline-dark" to="/">回首頁</router-link>
-          <router-link type="button" class="btn btn-outline-dark" to="/rader">及時雷達回波圖</router-link>
-          <router-link type="button" class="btn btn-outline-dark" to="/wmap">全台氣象站位置圖</router-link>
-          <router-link type="button" class="btn btn-outline-dark" to="/info">網站簡介</router-link>
-          <!-- <button type="button" class="btn btn-outline-dark" onclick="javascript:location.href='https://jemmy9211.github.io/'">Jemmy website</button> -->
-        </div>
-      </div>
-  </nav>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="text-white shadow-lg p-3 bg-dark rounded bg-opacity-75">
-        <h3>{{ wdata.locationName }} 未來36小時預報</h3>
-      </div>
+  <!-- Navigation bar -->
+  <NavBar />
+  
+  <!-- Main content -->
+  <div class="main-container">
+    <!-- Header -->
+    <div class="location-header">
+      <h3>{{ wdata.locationName }} 未來36小時預報</h3>
     </div>
-    <div class="container overflow-auto" style="height: 800px">
-      <div class="row">    
+    
+    <!-- Forecast content -->
+    <div class="forecast-container">
+      <div class="forecast-row">    
         <forcastcom v-for="x in totaldata" v-bind:forcastdata="x"></forcastcom>
-        <div class="container p-5">
-          <h3 class="text-white bg-black bg-opacity-50">{{sname}} 觀測站位置圖</h3>
-          <div style="height:400px; width:100%" ref="myDiv" class="shadow-lg mb-5">
-              <l-map ref="map" v-model:zoom="zoom" :center="[lat, lon]" :useGlobalLeaflet="false">
+        
+        <!-- Map section -->
+        <div class="map-container">
+          <h3 class="map-title">{{sname}} 觀測站位置圖</h3>
+          <div class="map-wrapper" ref="myDiv">
+            <l-map ref="map" v-model:zoom="zoom" :center="[lat, lon]" :useGlobalLeaflet="false">
               <l-tile-layer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  layer-type="base"
-                  name="OpenStreetMap"
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                layer-type="base"
+                name="OpenStreetMap"
               ></l-tile-layer>
-              <l-marker :lat-lng="[lat, lon]"> </l-marker>
-              </l-map>
+              <l-marker :lat-lng="[lat, lon]"></l-marker>
+            </l-map>
           </div>
         </div>
       </div>
@@ -95,5 +94,70 @@ export default {
 </template>
 
 <style>
+/* Remove the duplicate navbar styles since they are now in the NavBar component */
+.main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
 
+.location-header {
+  background-color: rgba(33, 37, 41, 0.75);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.forecast-container {
+  height: 800px;
+  overflow: auto;
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: rgba(248, 249, 250, 0.1);
+}
+
+.forecast-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.map-container {
+  grid-column: 1 / -1;
+  margin-top: 2rem;
+}
+
+.map-title {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 1rem;
+  border-radius: 10px 10px 0 0;
+  margin-bottom: 0;
+}
+
+.map-wrapper {
+  height: 400px;
+  width: 100%;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    flex-wrap: wrap;
+  }
+  
+  .nav-btn {
+    flex: 1 0 calc(50% - 0.5rem);
+    text-align: center;
+  }
+  
+  .forecast-row {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
 </style>

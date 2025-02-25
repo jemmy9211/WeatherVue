@@ -1,8 +1,13 @@
 <script>
 import axios from 'axios'
+import NavBar from './NavBar.vue';
+
 const url = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=CWA-FAC637E3-79B2-4800-B15D-9E19F7BB350B';
 
 export default {
+    components: {
+      NavBar
+    },
     data() {
         return {
             data: [],
@@ -44,25 +49,14 @@ export default {
 </script>
 
 <template>
-  <nav class="navbar p-3 text-primary-emphasis bg-light bg-opacity-75 sticky-top">
-    <div class="container-fluid">
-      <router-link class="navbar-brand" to="/"><h5><i class="bi bi-umbrella-fill"></i> Weather App using Vue</h5></router-link>
-      <div class="btn-group btn-group-sm border border-dark border-3">
-        <router-link type="button" class="btn btn-outline-dark" to="/">回首頁</router-link>
-        <router-link type="button" class="btn btn-outline-dark" to="/rader">及時雷達回波圖</router-link>
-        <router-link type="button" class="btn btn-outline-dark" to="/wmap">全台氣象站位置圖</router-link>
-        <router-link type="button" class="btn btn-outline-dark" to="/info">網站簡介</router-link>
-        <!-- <button type="button" class="btn btn-outline-dark" onclick="javascript:location.href='https://jemmy9211.github.io/'">Jemmy website</button> -->
-      </div>
-      <div class="input-group">
-        <input class="form-control mr-sm-2 p-2" v-model="search" placeholder="輸入臺北/臺南/東引/澎湖等關鍵字...">
-        <button type="button" class="btn btn-primary p-2">
-          <i class="bi bi-search"></i>
-        </button>
-      </div>
-    </div>
-  </nav>
+  <NavBar />
   <div class="container overflow-auto mb-7" style="height: calc(100vh - 150px)">
+    <div class="input-group mb-3 mt-3">
+      <input class="form-control mr-sm-2 p-2" v-model="search" placeholder="輸入臺北/臺南/東引/澎湖等關鍵字...">
+      <button type="button" class="btn btn-primary p-2">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
     <div v-if="showdiv" class="row p-3 p-md-5">
       <div class="row g-2">
         <weather-block v-for="(x,index) in filteredList" 

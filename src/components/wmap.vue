@@ -3,6 +3,8 @@ import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer,LMarker,LControlZoom,LIcon,LPopup,LControl} from "@vue-leaflet/vue-leaflet";
 import ico from "../assets/location-pin.png"
 import axios from 'axios'
+import NavBar from './NavBar.vue';
+
 const url = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=CWA-FAC637E3-79B2-4800-B15D-9E19F7BB350B';
 export default {
    components: {
@@ -12,7 +14,8 @@ export default {
     LControlZoom,
     LIcon,
     LPopup,
-    LControl
+    LControl,
+    NavBar
   },
   props:[],
   data(){
@@ -47,18 +50,7 @@ export default {
 <template>
   <div class="container-fluid">
     <div class="row">
-      <nav class="navbar p-3 text-primary-emphasis bg-light bg-opacity-75 sticky-top">
-        <div class="container-fluid">
-          <router-link class="navbar-brand" to="/"><h5><i class="bi bi-umbrella-fill"></i> Weather App using Vue</h5></router-link>
-          <div class="btn-group btn-group-sm border border-dark border-3">
-            <router-link type="button" class="btn btn-outline-dark" to="/">回首頁</router-link>
-            <router-link type="button" class="btn btn-outline-dark" to="/rader">及時雷達回波圖</router-link>
-            <router-link type="button" class="btn btn-outline-dark" to="/wmap">全台氣象站位置圖</router-link>
-            <router-link type="button" class="btn btn-outline-dark" to="/info">網站簡介</router-link>
-            <!-- <button type="button" class="btn btn-outline-dark" onclick="javascript:location.href='https://jemmy9211.github.io/'">Jemmy website</button> -->
-          </div>
-        </div>
-      </nav>
+      <NavBar />
     </div>
     <div class="row">
       <div class="alert alert-success">
