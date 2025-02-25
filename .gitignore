@@ -27,4 +27,5 @@ coverage
 *.sln
 *.sw?
 package-lock.json
-package-lock.json
+.vite/*
+node_modules/
