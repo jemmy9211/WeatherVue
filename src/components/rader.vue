@@ -100,7 +100,7 @@ export default{
 
 .card-header {
   padding: 1rem 1.5rem;
-  background-color: rgba(41, 98, 255, 0.7);
+  background-color: rgba(243, 244, 247, 0.7);
   color: white;
   display: flex;
   align-items: center;

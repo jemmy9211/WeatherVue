@@ -4,7 +4,7 @@
     <div class="container py-5">
       <!-- Header Section -->
       <div class="header-section text-center mb-5 animate__animated animate__fadeIn">
-        <h1 class="display-4 fw-bold text-primary mb-3">WeatherVue</h1>
+        <h1 class="display-4 fw-bold mb-3">WeatherVue</h1>
         <div class="col-lg-8 mx-auto">
           <p class="lead mb-4">
             A modern web application that visualizes weather data from Taiwan's Central Weather Bureau.
@@ -82,7 +82,7 @@ export default {
 
 <style scoped>
 .info-page {
-  background: linear-gradient(135deg, #1e5799, #207cca);
+  background: linear-gradient(135deg, rgba(30, 87, 153, 0.3), rgba(32, 124, 202, 0.3));
   min-height: 100vh;
   padding-bottom: 100px;
 }
