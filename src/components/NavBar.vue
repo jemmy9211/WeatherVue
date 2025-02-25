@@ -22,45 +22,58 @@ export default {
 
 <style>
 .main-navbar {
-  background-color: rgba(248, 249, 250, 0.85);
+  background-color: #2c3e50; /* Dark blue-gray background */
   padding: 1rem;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(5px);
 }
 
 .navbar-brand {
   text-decoration: none;
-  color: #0d6efd;
-  transition: transform 0.3s;
+  color: #3498db; /* Bright blue for the brand */
+  transition: all 0.3s;
 }
 
 .navbar-brand:hover {
   transform: scale(1.05);
+  color: #2ecc71; /* Green color on hover */
 }
 
 .nav-links {
   display: flex;
   gap: 0.5rem;
-  border: 2px solid #212529;
-  border-radius: 6px;
+  border: 2px solid #34495e; /* Darker blue-gray border */
+  border-radius: 8px;
   overflow: hidden;
+  background-color: #34495e; /* Slightly lighter than main background */
 }
 
 .nav-btn {
   padding: 0.5rem 1rem;
   text-decoration: none;
-  color: #212529;
-  background-color: transparent;
+  color: #ecf0f1; /* Light gray-white text */
+  background-color: transparent; /* Transparent background */
   transition: all 0.3s;
   font-weight: 500;
+  border-right: 1px solid #445566; /* Subtle divider */
+}
+
+.nav-btn:last-child {
+  border-right: none;
 }
 
 .nav-btn:hover {
-  background-color: #212529;
+  background-color: #3498db; /* Bright blue on hover */
   color: white;
+}
+
+.router-link-active.nav-btn {
+  background-color: #2ecc71; /* Green for active state */
+  color: white;
+  border-right: 1px solid #445566;
 }
 
 @media (max-width: 768px) {

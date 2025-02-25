@@ -77,7 +77,7 @@ export default {
     <div v-if="showdiv" class="row p-3 p-md-5">
       <div class="row g-2">
         <weather-block v-for="(x,index) in filteredList" 
-      v-bind:city="x" :citynum="index" :currentblock="false" class="col-12 col-sm-6 col-md-4 col-lg-3"/>
+      v-bind:city="x" :citynum="index" :currentblock="false" class="col-12 col-sm-6 col-md-4"/>
       </div>
     </div>
     <div v-else class="text-white text-center py-5">

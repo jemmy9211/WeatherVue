@@ -4,7 +4,7 @@
     <div v-if="showdiv" class="radar-container">
       <div class="radar-card">
         <div class="card-header">
-          <h4><span class="radar-badge">雷達整合回波圖-臺灣</span></h4>
+          <h4 style="font-size: smaller;"><span class="radar-badge">雷達整合回波圖-臺灣</span></h4>
           <div class="last-updated" v-if="lastUpdated">
             最後更新: {{ lastUpdated }}
           </div>
@@ -118,6 +118,7 @@ export default{
 .last-updated {
   font-size: 0.85rem;
   opacity: 0.9;
+  color: black;
 }
 
 .card-body {
