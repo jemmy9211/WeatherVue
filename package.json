@@ -18,10 +18,10 @@
     "vue-router": "^4.2.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^5.2.1",
     "@vue-leaflet/vue-leaflet": "^0.10.1",
     "leaflet": "^1.9.4",
-    "vite": "^4.4.6",
-    "vite-plugin-pwa": "^0.16.5"
+    "vite": "^6.2.0",
+    "vite-plugin-pwa": "^0.21.1"
   }
 }

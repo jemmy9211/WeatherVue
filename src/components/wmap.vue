@@ -65,8 +65,14 @@ export default {
               layer-type="base"
               name="OpenStreetMap"
           ></l-tile-layer>
-          <l-marker  v-for="(x,index) in data" :lat-lng="[x.GeoInfo.Coordinates[0].StationLatitude, x.GeoInfo.Coordinates[0].StationLongitude]"><l-popup><weather-block style="height: auto;width: auto;"
-            v-bind:city="x" :citynum="index"/></l-popup></l-marker>
+          <l-marker v-for="(x,index) in data" :lat-lng="[x.GeoInfo.Coordinates[0].StationLatitude, x.GeoInfo.Coordinates[0].StationLongitude]">
+            <l-popup>
+              <weather-block class="map-popup-weather-block" 
+                v-bind:city="x" 
+                :citynum="index" 
+                :inPopup="true"/>
+            </l-popup>
+          </l-marker>
           </l-map>
       </div>
       <div v-else class="text-white text-center">
@@ -83,5 +89,24 @@ export default {
   bottom: 0;
   height: 450px;
   width: 100%;
+}
+
+/* Fix popup styling */
+.leaflet-popup-content {
+  width: auto !important;
+  min-width: 280px;
+  margin: 5px !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: 8px;
+}
+
+.map-popup-weather-block {
+  width: 100%;
+  max-width: 300px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="col-lg-4 d-grid">
+  <div :class="['weather-card-container', { 'in-popup': inPopup }]">
     <router-link class="weather-card" :to="{path:'/forcastweather',query:{userId: city.GeoInfo.CountyName,lat: city.GeoInfo.Coordinates[0].StationLatitude,lon:city.GeoInfo.Coordinates[0].StationLongitude,sname:city.StationName}}">
       <div class="card-header">
         <h3><strong>{{ city.StationName }}</strong></h3>
@@ -33,10 +33,17 @@
   
 <script>
 export default {
-  props:['city','citynum'],
+  props: {
+    city: Object,
+    citynum: Number,
+    inPopup: {
+      type: Boolean,
+      default: false
+    }
+  },
   data(){
     return {
-      data:null
+      data: null
     }
   },
   methods: {
@@ -49,6 +56,15 @@ export default {
 </script>
   
 <style scoped>
+.weather-card-container {
+  display: grid;
+}
+
+.in-popup {
+  width: 100%;
+  padding: 0;
+}
+
 .weather-card {
   display: flex;
   flex-direction: column;
@@ -63,10 +79,11 @@ export default {
   border: 1px solid rgba(0, 123, 255, 0.2);
 }
 
-.weather-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
-  border-color: rgba(0, 123, 255, 0.5);
+.in-popup .weather-card {
+  margin: 0;
+  box-shadow: none;
+  border: none;
+  padding: 0.8rem;
 }
 
 .card-header {
@@ -82,6 +99,10 @@ export default {
   color: #0d6efd;
   margin-bottom: 0.5rem;
   font-size: 1.5rem;
+}
+
+.in-popup .card-header h3 {
+  font-size: 1.25rem;
 }
 
 .location-badge {
@@ -115,6 +136,10 @@ export default {
   margin-right: 1rem;
 }
 
+.in-popup .temperature-display h2 {
+  font-size: 1.5rem;
+}
+
 .weather-icon {
   display: flex;
   justify-content: center;
@@ -127,6 +152,10 @@ export default {
   margin-bottom: 1rem;
   text-align: center;
   font-size: 1.25rem;
+}
+
+.in-popup .weather-condition {
+  font-size: 1.1rem;
 }
 
 .card-details {
