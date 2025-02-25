@@ -105,6 +105,7 @@ export default{
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   backdrop-filter: blur(5px);
 }
 
@@ -113,12 +114,16 @@ export default{
   padding: 0.5rem 1rem;
   border-radius: 25px;
   font-weight: 500;
+  display: inline-block;
+  word-break: keep-all;
+  white-space: nowrap;
 }
 
 .last-updated {
   font-size: 0.85rem;
   opacity: 0.9;
   color: black;
+  margin-top: 5px;
 }
 
 .card-body {
@@ -211,5 +216,31 @@ export default{
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+@media (max-width: 576px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .radar-badge {
+    font-size: 14px;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .last-updated {
+    align-self: flex-end;
+    margin-right: 5px;
+  }
+  
+  .radar-page {
+    padding: 1rem 0.5rem;
+  }
+  
+  .loading-message {
+    padding: 1.5rem;
+  }
 }
 </style>

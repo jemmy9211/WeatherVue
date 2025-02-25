@@ -4,9 +4,9 @@
     <div class="container py-5">
       <!-- Header Section -->
       <div class="header-section text-center mb-5 animate__animated animate__fadeIn">
-        <h1 class="display-4 fw-bold mb-3">WeatherVue</h1>
+        <h1 class="display-4 fw-bold mb-3" style="color: black;">WeatherVue</h1>
         <div class="col-lg-8 mx-auto">
-          <p class="lead mb-4">
+          <p class="lead mb-4" style="color: black;">
             A modern web application that visualizes weather data from Taiwan's Central Weather Bureau.
           </p>
           <div class="divider"><span></span></div>
@@ -117,6 +117,7 @@ export default {
   height: 100%;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: black;
 }
 
 .feature-item:hover {

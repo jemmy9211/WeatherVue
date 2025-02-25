@@ -2,7 +2,7 @@
   <nav class="main-navbar">
     <div class="container-fluid">
       <router-link class="navbar-brand" to="/">
-        <h5><i class="bi bi-umbrella-fill"></i> Weather App using Vue</h5>
+        <h5 style="color: white;"><i class="bi bi-umbrella-fill"></i> Weather App using Vue</h5>
       </router-link>
       <div class="nav-links">
         <router-link class="nav-btn" to="/">回首頁</router-link>

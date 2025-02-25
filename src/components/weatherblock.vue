@@ -8,18 +8,18 @@
       
       <div class="card-body">
         <div class="temperature-display">
-          <h2><strong>{{ city.WeatherElement.AirTemperature }} °C</strong></h2>
+          <h2><strong>{{ formatValue(city.WeatherElement.AirTemperature, '°C') }}</strong></h2>
           <div class="weather-icon">
             <wicon v-bind:wvalue="city.WeatherElement.Weather"></wicon>
           </div>
         </div>
         
-        <h4 class="weather-condition">{{ city.WeatherElement.Weather }}</h4>
+        <h4 class="weather-condition">{{ formatWeather(city.WeatherElement.Weather) }}</h4>
         
         <div class="card-details">
           <div class="detail-item">
             <i class="bi bi-wind"></i>
-            <span>風速: {{ city.WeatherElement.WindSpeed }} m/s</span>
+            <span>風速: {{ formatValue(city.WeatherElement.WindSpeed, 'm/s') }}</span>
           </div>
           <div class="detail-item">
             <i class="bi bi-clock"></i>
@@ -50,6 +50,12 @@ export default {
     formatDateTime(dateTime) {
       if (!dateTime) return '';
       return dateTime.slice(0,16).replace('T', ' ');
+    },
+    formatValue(value, unit) {
+      return value === -99 ? '量測中' : `${value} ${unit}`;
+    },
+    formatWeather(weather) {
+      return weather === -99 ? '量測中' : weather;
     }
   }
 };
