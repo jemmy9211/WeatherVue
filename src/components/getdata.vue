@@ -89,13 +89,13 @@ export default {
 <template>
   <NavBar />
   <div class="weather-container overflow-auto mb-7 mt-3" style="height: calc(100vh - 150px)">
-    <div class="search-panel mb-4 mt-3 p-3">
+    <div class="search-panel mb-4 mt-3 p-4">
       <div class="input-group">
-        <input class="form-control mr-sm-2 p-2" v-model="search" placeholder="輸入臺北/臺南/東引/澎湖等關鍵字...">
-        <button type="button" class="btn btn-primary p-2">
+        <input class="form-control mr-sm-2 p-3" v-model="search" placeholder="輸入臺北/臺南/東引/澎湖等關鍵字...">
+        <button type="button" class="btn btn-primary p-3">
           <i class="bi bi-search"></i>
         </button>
-        <button type="button" class="temp-sort-btn ms-2" @click="toggleTemperatureSort" 
+        <button type="button" class="temp-sort-btn ms-3" @click="toggleTemperatureSort" 
           :class="{ 'active': isSortedByTemperature, 'active-low': isSortedByTemperature && sortDirection === 'low-to-high' }">
           <i class="bi" :class="{
             'bi-thermometer-high': !isSortedByTemperature,
@@ -108,8 +108,8 @@ export default {
       </div>
     </div>
     
-    <div v-if="showdiv" class="weather-data p-3 p-md-4">
-      <div class="row g-3">
+    <div v-if="showdiv" class="weather-data p-4">
+      <div class="row g-4">
         <weather-block v-for="(x,index) in filteredList" 
           v-bind:city="x" :citynum="index" :currentblock="false" class="col-12 col-sm-6 col-md-4"/>
       </div>
@@ -125,145 +125,263 @@ export default {
 </template>
 
 <style>
-/* 添加黑色透明背景與整體美化 */
+/* Apple Liquid Glass Design System */
 body {
-  background-color: #121212;
-  color: #f0f0f0;
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.1) 0%,
+    rgba(88, 86, 214, 0.1) 25%,
+    rgba(255, 45, 85, 0.1) 50%,
+    rgba(52, 199, 89, 0.1) 75%,
+    rgba(255, 149, 0, 0.1) 100%
+  );
+  background-attachment: fixed;
+  color: rgba(255, 255, 255, 0.95);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
 .weather-container {
-  background-color: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  border-radius: 24px;
   margin: 0 auto;
   max-width: 1200px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 6px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .search-panel {
-  background-color: rgba(30, 30, 30, 0.7);
-  border-radius: 12px;
-  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
   margin: 0 auto;
   max-width: 96%;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.search-panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 28px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .weather-data {
-  background-color: rgba(25, 25, 25, 0.6);
-  border-radius: 12px;
-  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
   margin: 0 auto;
   max-width: 96%;
+  box-shadow: 
+    0 4px 24px rgba(0, 0, 0, 0.06),
+    0 1px 4px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .loading-container {
-  background-color: rgba(20, 20, 20, 0.8);
-  border-radius: 12px;
-  padding: 2rem;
-  backdrop-filter: blur(5px);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 3rem;
   margin: 10% auto;
   max-width: 90%;
-}
-
-.btn-outline-primary.active {
-  background-color: #0d6efd;
-  color: white;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .temp-sort-btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  color: #5f9dff;
-  border: 1px solid rgba(95, 157, 255, 0.2);
-  font-weight: 500;
-  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  color: rgba(0, 122, 255, 1);
+  font-weight: 700;
+  gap: 0.75rem;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .temp-sort-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
-  border-color: rgba(95, 157, 255, 0.5);
-  background: linear-gradient(135deg, rgba(35, 35, 35, 0.95) 0%, rgba(45, 45, 45, 0.95) 100%);
+  transform: translateY(-2px) scale(1.02);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  color: rgba(0, 122, 255, 1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
 }
 
 .temp-sort-btn.active {
-  background: linear-gradient(135deg, rgba(13, 110, 253, 0.8) 0%, rgba(16, 85, 184, 0.8) 100%);
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.9) 0%, 
+    rgba(52, 120, 246, 0.9) 100%
+  );
   color: white;
-  border-color: #0d6efd;
+  border-color: rgba(0, 122, 255, 0.4);
+  box-shadow: 
+    0 4px 16px rgba(0, 122, 255, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .temp-sort-btn.active-low {
-  background: linear-gradient(135deg, rgba(25, 118, 210, 0.8) 0%, rgba(30, 136, 229, 0.8) 100%);
-  color: white;
-  border-color: #1976d2;
+  background: linear-gradient(135deg, 
+    rgba(52, 199, 89, 0.9) 0%, 
+    rgba(48, 176, 199, 0.9) 100%
+  );
+  border-color: rgba(52, 199, 89, 0.4);
+  box-shadow: 
+    0 4px 16px rgba(52, 199, 89, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .temp-sort-btn i {
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 input.form-control {
-  background-color: rgba(45, 45, 45, 0.7);
-  border: 1px solid rgba(100, 100, 100, 0.3);
-  color: #f0f0f0;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 1);
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-size: 1rem;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 input.form-control::placeholder {
-  color: rgba(200, 200, 200, 0.7);
+  color: rgba(120, 120, 120, 0.9);
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
 }
 
 input.form-control:focus {
-  background-color: rgba(60, 60, 60, 0.8);
-  box-shadow: 0 0 0 0.25rem rgba(95, 157, 255, 0.25);
-  border-color: rgba(95, 157, 255, 0.5);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(0, 122, 255, 0.6);
+  box-shadow: 
+    0 0 0 3px rgba(0, 122, 255, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 1);
+  transform: translateY(-1px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, rgba(13, 110, 253, 0.9) 0%, rgba(16, 85, 184, 0.9) 100%);
-  border: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.9) 0%, 
+    rgba(52, 120, 246, 0.9) 100%
+  );
+  border: 1px solid rgba(0, 122, 255, 0.3);
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-weight: 700;
+  color: white;
+  box-shadow: 
+    0 3px 12px rgba(0, 122, 255, 0.25),
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, rgba(16, 122, 255, 0.95) 0%, rgba(20, 95, 204, 0.95) 100%);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 1) 0%, 
+    rgba(52, 120, 246, 1) 100%
+  );
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 6px 20px rgba(0, 122, 255, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-/* 添加滾動條美化 */
+/* 滾動條液態玻璃效果 */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(30, 30, 30, 0.5);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(95, 157, 255, 0.5);
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.6) 0%, 
+    rgba(52, 199, 89, 0.6) 100%
+  );
   border-radius: 10px;
+  backdrop-filter: blur(10px);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(95, 157, 255, 0.7);
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.8) 0%, 
+    rgba(52, 199, 89, 0.8) 100%
+  );
 }
 
-/* 確保響應式排版 */
+/* 響應式優化 */
 @media (max-width: 768px) {
   .weather-container {
-    border-radius: 0;
+    border-radius: 20px;
+    margin: 0 8px;
   }
   
   .search-panel, .weather-data {
     max-width: 98%;
+    border-radius: 16px;
   }
+  
+  .temp-sort-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* 提升動畫流暢度 */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 </style>
