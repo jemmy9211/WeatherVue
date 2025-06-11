@@ -75,21 +75,27 @@ export default {
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(240,249,255,0.9) 100%);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
   padding: 1.2rem;
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(0, 123, 255, 0.2);
+}
+
+.weather-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.35);
 }
 
 .in-popup .weather-card {
   margin: 0;
-  box-shadow: none;
-  border: none;
   padding: 0.8rem;
+  box-shadow: 0 4px 16px rgba(31, 38, 135, 0.15);
 }
 
 .card-header {
@@ -112,7 +118,7 @@ export default {
 }
 
 .location-badge {
-  background-color: rgba(13, 110, 253, 0.1);
+  background-color: rgba(13, 110, 253, 0.15);
   color: #0d6efd;
   padding: 0.25rem 0.75rem;
   border-radius: 20px;

@@ -4,9 +4,9 @@
     <div class="container py-5">
       <!-- Header Section -->
       <div class="header-section text-center mb-5 animate__animated animate__fadeIn">
-        <h1 class="display-4 fw-bold mb-3" style="color: black;">WeatherVue</h1>
+        <h1 class="display-4 fw-bold mb-3">WeatherVue</h1>
         <div class="col-lg-8 mx-auto">
-          <p class="lead mb-4" style="color: black;">
+          <p class="lead mb-4">
             A modern web application that visualizes weather data from Taiwan's Central Weather Bureau.
           </p>
           <div class="divider"><span></span></div>
@@ -62,7 +62,7 @@
     </div>
   </div>
 
-  <footer class="py-4 bg-dark text-white-50">
+  <footer class="glass-footer">
     <div class="container text-center">
       <small>Copyright &copy; 2023 jemmy9211 Website</small><br>
       <small>資料來自中華民國氣象局</small>
@@ -87,47 +87,111 @@ export default {
   padding-bottom: 100px;
 }
 
+.header-section h1 {
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 1) 0%,
+    rgba(52, 199, 89, 1) 50%,
+    rgba(255, 149, 0, 1) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-section p {
+  color: rgba(40, 40, 40, 0.9);
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
 .info-card {
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
-  padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.info-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .info-text {
-  color: #333;
+  color: rgba(40, 40, 40, 0.9);
   font-size: 1.1rem;
   line-height: 1.7;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .feature-heading {
-  color: #1e5799;
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 1) 0%,
+    rgba(52, 199, 89, 1) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
   position: relative;
-  font-weight: 600;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .feature-item {
   display: flex;
   align-items: flex-start;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 10px;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
   height: 100%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: black;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    0 1px 4px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .feature-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-4px) scale(1.02);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.feature-item p {
+  color: rgba(40, 40, 40, 0.9);
+  font-weight: 500;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .icon {
   font-size: 1.5rem;
-  color: #1e5799;
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 1) 0%,
+    rgba(52, 199, 89, 1) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   margin-right: 1rem;
   flex-shrink: 0;
 }
@@ -142,11 +206,25 @@ export default {
 .divider span {
   flex-grow: 1;
   height: 2px;
-  background: rgba(255, 255, 255, 0.6);
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
 }
 
-footer {
+.glass-footer {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 2rem 0;
   margin-top: auto;
+  color: rgba(40, 40, 40, 0.9);
+  box-shadow: 
+    0 -4px 24px rgba(0, 0, 0, 0.08),
+    0 -1px 4px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 768px) {
@@ -157,6 +235,10 @@ footer {
   .icon {
     margin-right: 0;
     margin-bottom: 0.5rem;
+  }
+  
+  .info-card {
+    padding: 1.5rem;
   }
 }
 </style>

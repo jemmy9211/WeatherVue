@@ -90,39 +90,63 @@ export default{
 }
 
 .radar-card {
-  background-color: rgba(255, 255, 255, 0.6);
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow: hidden;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.radar-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .card-header {
-  padding: 1rem 1.5rem;
-  background-color: rgba(243, 244, 247, 0.7);
-  color: white;
+  padding: 1.5rem 2rem;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  backdrop-filter: blur(5px);
 }
 
 .radar-badge {
-  background-color: rgba(25, 118, 210, 0.8);
-  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.9) 0%, 
+    rgba(52, 199, 89, 0.9) 100%
+  );
+  color: white;
+  padding: 0.75rem 1.5rem;
   border-radius: 25px;
-  font-weight: 500;
+  font-weight: 600;
   display: inline-block;
   word-break: keep-all;
   white-space: nowrap;
+  box-shadow: 
+    0 4px 16px rgba(0, 122, 255, 0.2),
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .last-updated {
-  font-size: 0.85rem;
-  opacity: 0.9;
-  color: black;
+  font-size: 0.9rem;
+  color: rgba(40, 40, 40, 0.9);
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
   margin-top: 5px;
 }
 
@@ -130,8 +154,10 @@ export default{
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
-  background-color: rgba(245, 250, 255, 0.5);
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   min-height: 400px;
 }
 
@@ -139,36 +165,58 @@ export default{
   max-width: 100%;
   max-height: 70vh;
   object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .radar-image:hover {
   transform: scale(1.02);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .card-footer {
-  padding: 1rem;
+  padding: 1.5rem;
   text-align: center;
-  background-color: rgba(230, 240, 255, 0.5);
-  backdrop-filter: blur(3px);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .refresh-button {
-  background-color: rgba(25, 118, 210, 0.9);
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 0.9) 0%, 
+    rgba(52, 120, 246, 0.9) 100%
+  );
   color: white;
   border: none;
   border-radius: 25px;
-  padding: 0.5rem 1.5rem;
-  font-weight: 500;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 
+    0 4px 16px rgba(0, 122, 255, 0.2),
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .refresh-button:hover {
-  background-color: rgba(13, 71, 161, 0.9);
+  transform: translateY(-2px) scale(1.05);
+  background: linear-gradient(135deg, 
+    rgba(0, 122, 255, 1) 0%, 
+    rgba(52, 120, 246, 1) 100%
+  );
+  box-shadow: 
+    0 6px 20px rgba(0, 122, 255, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .loading-container {
@@ -176,7 +224,6 @@ export default{
   justify-content: center;
   align-items: center;
   height: 70vh;
-  color: white;
 }
 
 .loading-content {
@@ -187,23 +234,36 @@ export default{
   width: 60px;
   height: 60px;
   margin: 0 auto 2rem;
-  border: 5px solid rgba(255, 255, 255, 0.3);
+  border: 5px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  border-top-color: white;
+  border-top-color: rgba(0, 122, 255, 1);
   animation: spin 1s ease-in-out infinite;
 }
 
 .loading-message {
-  background-color: rgba(41, 98, 255, 0.5);
-  padding: 2rem;
-  border-radius: 12px;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: rgba(40, 40, 40, 0.9);
 }
 
 .loading-message h4 {
   margin-bottom: 1rem;
-  font-weight: 500;
+  font-weight: 600;
+  color: rgba(40, 40, 40, 0.9);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.loading-message p {
+  color: rgba(40, 40, 40, 0.8);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -223,11 +283,12 @@ export default{
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+    padding: 1rem 1.5rem;
   }
   
   .radar-badge {
     font-size: 14px;
-    padding: 0.4rem 0.8rem;
+    padding: 0.5rem 1rem;
   }
   
   .last-updated {
@@ -241,6 +302,10 @@ export default{
   
   .loading-message {
     padding: 1.5rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
   }
 }
 </style>
