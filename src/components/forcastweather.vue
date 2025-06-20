@@ -73,20 +73,20 @@ export default {
     <div class="forecast-container">
       <div class="forecast-row">    
         <forcastcom v-for="x in totaldata" v-bind:forcastdata="x"></forcastcom>
-        
-        <!-- Map section -->
-        <div class="map-container">
-          <h3 class="map-title">{{sname}} 觀測站位置圖</h3>
-          <div class="map-wrapper" ref="myDiv">
-            <l-map ref="map" v-model:zoom="zoom" :center="[lat, lon]" :useGlobalLeaflet="false">
-              <l-tile-layer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                layer-type="base"
-                name="OpenStreetMap"
-              ></l-tile-layer>
-              <l-marker :lat-lng="[lat, lon]"></l-marker>
-            </l-map>
-          </div>
+      </div>
+      
+      <!-- Map section -->
+      <div class="map-container">
+        <h3 class="map-title">{{sname}} 觀測站位置圖</h3>
+        <div class="map-wrapper" ref="myDiv">
+          <l-map ref="map" v-model:zoom="zoom" :center="[lat, lon]" :useGlobalLeaflet="false">
+            <l-tile-layer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              layer-type="base"
+              name="OpenStreetMap"
+            ></l-tile-layer>
+            <l-marker :lat-lng="[lat, lon]"></l-marker>
+          </l-map>
         </div>
       </div>
     </div>
@@ -96,8 +96,9 @@ export default {
 <style>
 .main-container {
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 2rem auto;
   padding: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
 .location-header {
@@ -105,8 +106,8 @@ export default {
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(40, 40, 40, 0.9);
-  padding: 2rem;
+  color: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
   border-radius: 20px;
   margin-bottom: 2rem;
   text-align: center;
@@ -140,7 +141,10 @@ export default {
 }
 
 .forecast-container {
-  height: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 80vh;
   overflow: auto;
   padding: 1.5rem;
   border-radius: 20px;
@@ -155,13 +159,15 @@ export default {
 }
 
 .forecast-row {
+  width: 90%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .map-container {
-  grid-column: 1 / -1;
+  width: 90%;
   margin-top: 2rem;
 }
 
@@ -171,7 +177,7 @@ export default {
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-bottom: none;
-  color: rgba(40, 40, 40, 0.9);
+  color: #000000;
   padding: 1.5rem;
   border-radius: 20px 20px 0 0;
   margin-bottom: 0;

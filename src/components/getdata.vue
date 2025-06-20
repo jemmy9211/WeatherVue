@@ -19,7 +19,8 @@ export default {
             currentlocationy: '',
             currentlocation: null,
             isSortedByTemperature: false,
-            sortDirection: 'high-to-low'
+            sortDirection: 'high-to-low',
+            viewMode: 'grid'
         };
     },
     created() {
@@ -81,6 +82,9 @@ export default {
             } else {
                 this.isSortedByTemperature = false;
             }
+        },
+        toggleViewMode() {
+            this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';
         }
     }
 };
@@ -105,13 +109,21 @@ export default {
           {{ !isSortedByTemperature ? '依溫度排序' : 
              sortDirection === 'high-to-low' ? '溫度 (高→低)' : '溫度 (低→高)' }}
         </button>
+        <button type="button" class="temp-sort-btn ms-2" @click="toggleViewMode" title="切換檢視模式">
+          <i class="bi" :class="viewMode === 'grid' ? 'bi-list-ul' : 'bi-grid-3x3-gap-fill'"></i>
+        </button>
       </div>
     </div>
     
     <div v-if="showdiv" class="weather-data p-4">
-      <div class="row g-4">
+      <div :class="viewMode === 'grid' ? 'row g-3' : 'list-view-container'">
         <weather-block v-for="(x,index) in filteredList" 
-          v-bind:city="x" :citynum="index" :currentblock="false" class="col-12 col-sm-6 col-md-4"/>
+          v-bind:city="x" 
+          :citynum="index" 
+          :currentblock="false"
+          :view="viewMode"
+          :class="viewMode === 'grid' ? 'col-12 col-sm-6 col-md-4 col-lg-3' : 'col-12'"
+          />
       </div>
     </div>
     
@@ -276,7 +288,7 @@ input.form-control {
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 14px;
-  color: rgba(255, 255, 255, 1);
+  color: #000;
   font-weight: 600;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   font-size: 1rem;
@@ -287,9 +299,9 @@ input.form-control {
 }
 
 input.form-control::placeholder {
-  color: rgba(120, 120, 120, 0.9);
+  color: rgba(0, 0, 0, 0.6);
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
+  text-shadow: none;
 }
 
 input.form-control:focus {
@@ -299,7 +311,7 @@ input.form-control:focus {
     0 0 0 3px rgba(0, 122, 255, 0.15),
     0 4px 12px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 1);
+  color: #000;
   transform: translateY(-1px);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
 }
@@ -383,5 +395,11 @@ input.form-control:focus {
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.list-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 </style>
