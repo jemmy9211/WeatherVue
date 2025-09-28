@@ -1,8 +1,8 @@
 <script>
 import axios from 'axios'
 import NavBar from './NavBar.vue';
-
-const url = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=CWA-FAC637E3-79B2-4800-B15D-9E19F7BB350B';
+const apiKey = import.meta.env.VITE_CWA_KEY;
+const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${apiKey}`;
 
 export default {
     components: {

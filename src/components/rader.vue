@@ -36,8 +36,8 @@
 <script>
 import axios from 'axios'
 import NavBar from './NavBar.vue';
-
-const url ='https://opendata.cwa.gov.tw/fileapi/v1/opendataapi/O-A0058-003?Authorization=CWA-FAC637E3-79B2-4800-B15D-9E19F7BB350B&downloadType=WEB&format=JSON'
+const apiKey = import.meta.env.VITE_CWA_KEY;
+const url =`https://opendata.cwa.gov.tw/fileapi/v1/opendataapi/O-A0058-003?Authorization=${apiKey}&downloadType=WEB&format=JSON`
 export default{
   components: {
     NavBar
