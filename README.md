@@ -21,6 +21,21 @@ WeatherVue is a web application that integrates with the public API provided by 
 - **Leaflet**: Interactive mapping library
 - **Axios**: HTTP client for API requests
 
+## Mobile Design Enhancements (Brief)
+
+- Glassmorphism visuals with layered gradients and shadow hierarchy; interactive feedback (press scale, focus glow)
+- Upgrades across mobile views: search page, weather cards, forecast, radar, navbar, info, plus global background/animations
+- Performance: GPU-accelerated transforms, optimized gradients/transitions, smooth page animations
+- Compatibility: iOS Safari 12+, Chrome/Edge 80+, Firefox 75+, Samsung Internet 12+
+
+## Responsive Design Updates (Brief)
+
+- Breakpoints at 1200/992/768/576/420px for desktop/tablet/mobile tuning
+- Layout: grids collapse to single column, vertical stacking, buttons wrap/reflow on small screens
+- Page optimizations: navbar, search, weather cards, forecast and cards, radar, map, info
+- Touch-friendly: minimum 44px targets, smooth scrolling, visible tap highlight
+- Performance: adaptive background/media sizing, scaled map/markers on small devices
+
 ## Project Setup
 
 Project GitHub Page Link: [WeatherVue GitHub Page](https://jemmy9211.github.io/WeatherVue/)

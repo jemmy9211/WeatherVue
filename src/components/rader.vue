@@ -278,34 +278,216 @@ export default{
   to { transform: rotate(360deg); }
 }
 
-@media (max-width: 576px) {
+/* Responsive design optimization */
+@media (max-width: 1200px) {
+  .radar-container {
+    max-width: 95%;
+  }
+  
+  .radar-card {
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 992px) {
+  /* Tablet styles */
+  .radar-page {
+    padding: 1.5rem 1rem;
+  }
+  
+  .radar-container {
+    max-width: 100%;
+  }
+  
+  .radar-card {
+    border-radius: 18px;
+  }
+  
   .card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 1rem 1.5rem;
+    padding: 1.25rem 1.75rem;
   }
   
   .radar-badge {
-    font-size: 14px;
-    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    padding: 0.65rem 1.25rem;
   }
   
-  .last-updated {
-    align-self: flex-end;
-    margin-right: 5px;
+  .card-body {
+    padding: 1.5rem;
+    min-height: 350px;
   }
   
+  .radar-image {
+    max-height: 60vh;
+    border-radius: 10px;
+  }
+  
+  .refresh-button {
+    padding: 0.7rem 1.75rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile layout-only adjustments */
   .radar-page {
     padding: 1rem 0.5rem;
   }
   
-  .loading-message {
-    padding: 1.5rem;
+  .radar-card {
+    border-radius: 16px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+  }
+  
+  .radar-badge {
+    font-size: 0.875rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 20px;
+  }
+  
+  .last-updated {
+    font-size: 0.85rem;
+    align-self: flex-start;
+    margin-top: 0;
   }
   
   .card-body {
     padding: 1rem;
+    min-height: 300px;
+  }
+  
+  .radar-image {
+    max-height: 50vh;
+    border-radius: 8px;
+  }
+  
+  .card-footer {
+    padding: 1.25rem;
+  }
+  
+  .refresh-button {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+  
+  .loading-message {
+    padding: 2rem 1.5rem;
+  }
+  
+  .loading-message h4 {
+    font-size: 1.1rem;
+  }
+  
+  .loading-message p {
+    font-size: 0.95rem;
+  }
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Small mobile styles */
+  .radar-page {
+    padding: 0.75rem 0.25rem;
+  }
+  
+  .radar-card {
+    border-radius: 14px;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.875rem 1rem;
+  }
+  
+  .radar-badge {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.95rem;
+    border-radius: 18px;
+  }
+  
+  .last-updated {
+    font-size: 0.8rem;
+    margin-right: 0;
+  }
+  
+  .card-body {
+    padding: 0.75rem;
+    min-height: 250px;
+  }
+  
+  .radar-image {
+    max-height: 45vh;
+    border-radius: 8px;
+  }
+  
+  .card-footer {
+    padding: 1rem;
+  }
+  
+  .refresh-button {
+    padding: 0.75rem 1.25rem;
+    border-radius: 18px;
+    font-size: 0.875rem;
+  }
+  
+  .loading-message {
+    padding: 1.5rem 1rem;
+  }
+  
+  .loading-message h4 {
+    font-size: 1rem;
+  }
+  
+  .loading-message p {
+    font-size: 0.9rem;
+  }
+  
+  .spinner {
+    width: 45px;
+    height: 45px;
+    border-width: 4px;
+  }
+}
+
+@media (max-width: 420px) {
+  /* Extra small mobile styles */
+  .radar-badge {
+    font-size: 0.75rem;
+    padding: 0.45rem 0.85rem;
+  }
+  
+  .last-updated {
+    font-size: 0.75rem;
+  }
+  
+  .radar-image {
+    max-height: 40vh;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .refresh-button {
+    min-height: 44px; /* Minimum touch target size */
+  }
+  
+  .radar-image {
+    -webkit-overflow-scrolling: touch;
   }
 }
 </style>

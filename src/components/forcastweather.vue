@@ -229,17 +229,145 @@ export default {
   background-clip: content-box;
 }
 
-@media (max-width: 768px) {
+/* Responsive design optimization */
+@media (max-width: 1200px) {
+  .main-container {
+    max-width: 95%;
+    padding: 0.75rem;
+  }
+  
   .forecast-row {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 992px) {
+  /* Tablet styles */
+  .main-container {
+    margin: 1.5rem auto;
+    padding: 0.5rem;
+  }
+  
+  .location-header {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: 18px;
+  }
+  
+  .location-header h3 {
+    font-size: 1.5rem;
+  }
+  
+  .forecast-container {
+    padding: 1.25rem;
+    border-radius: 18px;
+  }
+  
+  .forecast-row {
+    width: 95%;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .map-container {
+    width: 95%;
+    margin-top: 1.5rem;
+  }
+  
+  .map-title {
+    padding: 1.25rem;
+    font-size: 1.1rem;
+    border-radius: 18px 18px 0 0;
+  }
+  
+  .map-wrapper {
+    height: 350px;
+    border-radius: 0 0 18px 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile layout-only adjustments */
+  .main-container {
+    margin: 1rem 0.5rem;
+    padding: 0.5rem;
+  }
+  
+  .location-header {
+    padding: 1rem;
+    margin-bottom: 1rem;
   }
   
   .forecast-container {
     padding: 1rem;
+    min-height: 60vh;
+  }
+  
+  .forecast-row {
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .map-container {
+    width: 100%;
+    margin-top: 1rem;
+  }
+  
+  .map-title {
+    padding: 1rem;
+  }
+  
+  .map-wrapper {
+    height: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Small mobile styles */
+  .main-container {
+    margin: 0.75rem 0.25rem;
+    padding: 0.25rem;
   }
   
   .location-header {
-    padding: 1.5rem;
+    padding: 0.875rem;
+    border-radius: 14px;
+  }
+  
+  .location-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .forecast-container {
+    padding: 0.75rem;
+    border-radius: 14px;
+  }
+  
+  .forecast-row {
+    gap: 0.875rem;
+  }
+  
+  .map-title {
+    padding: 0.875rem;
+    font-size: 0.95rem;
+    border-radius: 14px 14px 0 0;
+  }
+  
+  .map-wrapper {
+    height: 250px;
+    border-radius: 0 0 14px 14px;
+  }
+}
+
+/* Touch-friendly improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase touch target sizes on touch devices */
+  .forecast-container {
+    -webkit-overflow-scrolling: touch;
   }
 }
 </style>

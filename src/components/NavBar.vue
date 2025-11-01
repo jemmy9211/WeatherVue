@@ -155,6 +155,22 @@ export default {
   display: none;
 }
 
+/* Responsive design optimization */
+@media (max-width: 1200px) {
+  .main-navbar {
+    padding: 1.15rem 1.25rem;
+  }
+  
+  .navbar-brand h5 {
+    font-size: 1.2rem;
+  }
+  
+  .nav-btn {
+    padding: 0.7rem 1.15rem;
+    font-size: 0.875rem;
+  }
+}
+
 @media (max-width: 992px) {
   .main-navbar {
     padding: 1rem;
@@ -185,6 +201,62 @@ export default {
     flex: 1;
     text-align: center;
     min-width: calc(50% - 0.125rem);
+  }
+}
+
+@media (max-width: 576px) {
+  /* Small mobile styles */
+  .main-navbar {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .container-fluid {
+    gap: 0.75rem;
+  }
+  
+  .navbar-brand h5 {
+    font-size: 0.95rem;
+  }
+  
+  .navbar-brand h5 i {
+    font-size: 0.9rem;
+  }
+  
+  .nav-links {
+    padding: 0.15rem;
+    gap: 0.15rem;
+    border-radius: 12px;
+  }
+  
+  .nav-btn {
+    padding: 0.55rem 0.7rem;
+    font-size: 0.75rem;
+    border-radius: 9px;
+    letter-spacing: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  /* Extra small mobile styles */
+  .navbar-brand h5 {
+    font-size: 0.875rem;
+  }
+  
+  .nav-btn {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.7rem;
+    border-radius: 8px;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .nav-btn {
+    min-height: 44px; /* Minimum touch target size */
+  }
+  
+  .navbar-brand {
+    -webkit-tap-highlight-color: rgba(0, 122, 255, 0.1);
   }
 }
 </style>

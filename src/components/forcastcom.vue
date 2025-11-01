@@ -176,4 +176,153 @@ label {
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
+
+/* Responsive design optimization */
+@media (max-width: 1200px) {
+  .forecast-card {
+    padding: 1.75rem;
+    border-radius: 18px;
+  }
+  
+  .time-header h5 {
+    font-size: 1.05rem;
+  }
+  
+  .weather-condition h4 {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 992px) {
+  /* Tablet styles */
+  .forecast-card {
+    padding: 1.5rem;
+    border-radius: 18px;
+    margin-bottom: 1.25rem;
+  }
+  
+  .time-header {
+    padding-bottom: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .time-header h5 {
+    font-size: 1rem;
+  }
+  
+  .weather-condition {
+    margin: 1.25rem 0;
+  }
+  
+  .weather-condition h4 {
+    font-size: 1.1rem;
+  }
+  
+  .temp-section, .pop-section {
+    margin: 1.25rem 0;
+  }
+  
+  .progress {
+    height: 0.95rem;
+    margin-bottom: 0.875rem;
+  }
+  
+  label {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile layout-only adjustments */
+  .forecast-card {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .time-header {
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Small mobile styles */
+  .forecast-card {
+    padding: 1rem;
+    border-radius: 14px;
+    margin-bottom: 0.875rem;
+  }
+  
+  .time-header {
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.875rem;
+  }
+  
+  .time-header h5 {
+    font-size: 0.9rem;
+  }
+  
+  .weather-condition {
+    margin: 0.875rem 0;
+  }
+  
+  .weather-condition h4 {
+    font-size: 1rem;
+  }
+  
+  .temp-section, .pop-section {
+    margin: 0.875rem 0;
+  }
+  
+  .temp-section h5, .pop-section h5 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .progress {
+    height: 0.75rem;
+    margin-bottom: 0.625rem;
+    border-radius: 6px;
+  }
+  
+  .progress-bar {
+    border-radius: 6px;
+  }
+  
+  label {
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+  }
+}
+
+@media (max-width: 420px) {
+  /* Extra small mobile styles */
+  .forecast-card {
+    padding: 0.875rem;
+    border-radius: 12px;
+  }
+  
+  .time-header h5 {
+    font-size: 0.85rem;
+  }
+  
+  .weather-condition h4 {
+    font-size: 0.95rem;
+  }
+  
+  .temp-section h5, .pop-section h5 {
+    font-size: 0.85rem;
+  }
+  
+  label {
+    font-size: 0.8rem;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .forecast-card {
+    -webkit-tap-highlight-color: rgba(0, 122, 255, 0.1);
+  }
+}
 </style>

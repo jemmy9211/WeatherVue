@@ -373,21 +373,120 @@ input.form-control:focus {
   );
 }
 
-/* 響應式優化 */
-@media (max-width: 768px) {
+/* Responsive design optimization */
+@media (max-width: 1200px) {
   .weather-container {
-    border-radius: 20px;
-    margin: 0 8px;
+    max-width: 95%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 992px) {
+  /* Tablet styles */
+  .weather-container {
+    border-radius: 18px;
+    margin: 0 1rem;
+    height: calc(100vh - 180px);
+  }
+  
+  .search-panel {
+    padding: 1rem;
+  }
+  
+  .input-group {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .temp-sort-btn {
+    padding: 0.7rem 1.1rem;
+    font-size: 0.875rem;
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+  }
+  
+  .temp-sort-btn:nth-child(3) {
+    margin-left: 0 !important;
+  }
+  
+  .temp-sort-btn:nth-child(4) {
+    margin-left: 0 !important;
+    min-width: 60px;
+    flex: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile layout-only adjustments */
+  .weather-container {
+    margin: 0.5rem;
+    height: calc(100vh - 170px);
   }
   
   .search-panel, .weather-data {
     max-width: 98%;
-    border-radius: 16px;
+    padding: 0.75rem !important;
+  }
+  
+  .input-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  input.form-control {
+    width: 100% !important;
+    padding: 0.875rem !important;
+  }
+  
+  .btn-primary {
+    width: 100%;
+    padding: 0.875rem !important;
   }
   
   .temp-sort-btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.85rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin: 0 !important;
+    justify-content: center;
+  }
+  
+  .row.g-3 {
+    gap: 1rem !important;
+  }
+  
+  .weather-data {
+    padding: 0.75rem !important;
+  }
+  
+  .loading-container {
+    max-width: 95%;
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  /* Small mobile layout-only */
+  .weather-container {
+    margin: 0.25rem;
+  }
+  
+  .search-panel {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  input.form-control {
+    padding: 0.75rem !important;
+  }
+  
+  .btn-primary {
+    padding: 0.75rem !important;
+  }
+  
+  .temp-sort-btn {
+    padding: 0.65rem 0.875rem;
+    gap: 0.5rem;
   }
 }
 

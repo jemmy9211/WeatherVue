@@ -227,7 +227,78 @@ export default {
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
+/* Responsive design optimization */
+@media (max-width: 1200px) {
+  .container {
+    padding: 0 2rem;
+  }
+  
+  .info-card {
+    padding: 2.25rem;
+  }
+}
+
+@media (max-width: 992px) {
+  /* Tablet styles */
+  .container {
+    padding: 0 1.5rem;
+  }
+  
+  .header-section h1 {
+    font-size: 2.5rem;
+  }
+  
+  .header-section p {
+    font-size: 1.05rem;
+  }
+  
+  .info-card {
+    padding: 2rem;
+  }
+  
+  .info-text {
+    font-size: 1.05rem;
+  }
+  
+  .feature-heading {
+    font-size: 1.4rem;
+  }
+  
+  .feature-item {
+    padding: 1.25rem;
+  }
+  
+  .icon {
+    font-size: 1.4rem;
+  }
+}
+
 @media (max-width: 768px) {
+  /* Mobile layout-only adjustments */
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .info-page {
+    padding-bottom: 80px;
+  }
+  
+  .header-section {
+    margin-bottom: 2rem !important;
+  }
+  
+  .header-section h1 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .header-section p {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .info-card {
+    padding: 1.5rem;
+  }
+  
   .feature-item {
     flex-direction: column;
   }
@@ -236,9 +307,46 @@ export default {
     margin-right: 0;
     margin-bottom: 0.5rem;
   }
+}
+
+@media (max-width: 576px) {
+  /* Small mobile layout-only */
+  .container {
+    padding: 0 0.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  /* Extra small mobile styles */
+  .header-section h1 {
+    font-size: 1.5rem;
+  }
   
   .info-card {
-    padding: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .info-text {
+    font-size: 0.9rem;
+  }
+  
+  .feature-item {
+    padding: 0.75rem;
+  }
+  
+  .feature-item p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .feature-item {
+    -webkit-tap-highlight-color: rgba(0, 122, 255, 0.05);
+  }
+  
+  .info-page {
+    -webkit-overflow-scrolling: touch;
   }
 }
 </style>
