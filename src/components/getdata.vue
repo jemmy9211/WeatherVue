@@ -23,15 +23,7 @@ export default {
         };
     },
     created() {
-        const apiKey = import.meta.env.VITE_CWA_KEY;
-        
-        // Check if API key is set
-        if (!apiKey || apiKey === 'YOUR_API_KEY_HERE') {
-            console.error("API Key is not set! Please set VITE_CWA_KEY in your .env file");
-            this.errorMessage = "請在 .env 檔案中設定 VITE_CWA_KEY";
-            this.showdiv = false;
-            return;
-        }
+        const apiKey = 'CWA-FAC637E3-79B2-4800-B15D-9E19F7BB350B';
         
         const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${apiKey}`;
         console.log("Fetching weather data...");
