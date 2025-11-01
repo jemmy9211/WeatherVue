@@ -4,7 +4,7 @@ import { LMap, LTileLayer, LMarker, LControlZoom, LIcon, LPopup, LControl } from
 import ico from "../assets/location-pin.png"
 import axios from 'axios'
 import NavBar from './NavBar.vue';
-const apiKey = import.meta.env.VITE_CWA_KEY;
+const apiKey = 'CWA-FAC637E3-79B2-4800-B15D-9E19F7BB350B';
 const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${apiKey}`;
 export default {
   components: {
