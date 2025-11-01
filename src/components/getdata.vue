@@ -1,8 +1,6 @@
 <script>
 import axios from 'axios'
 import NavBar from './NavBar.vue';
-const apiKey = import.meta.env.VITE_CWA_KEY;
-const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${apiKey}`;
 
 export default {
     components: {
@@ -20,17 +18,42 @@ export default {
             currentlocation: null,
             isSortedByTemperature: false,
             sortDirection: 'high-to-low',
-            viewMode: 'grid'
+            viewMode: 'grid',
+            errorMessage: ''
         };
     },
     created() {
+        const apiKey = import.meta.env.VITE_CWA_KEY;
+        
+        // Check if API key is set
+        if (!apiKey || apiKey === 'YOUR_API_KEY_HERE') {
+            console.error("API Key is not set! Please set VITE_CWA_KEY in your .env file");
+            this.errorMessage = "請在 .env 檔案中設定 VITE_CWA_KEY";
+            this.showdiv = false;
+            return;
+        }
+        
+        const url = `https://opendata.cwa.gov.tw/api/v1/rest/datastore/O-A0003-001?Authorization=${apiKey}`;
+        console.log("Fetching weather data...");
+        
         axios.get(url)
             .then((res) => {
             this.data = res.data.records.Station;
-            //console.log(res)
+            console.log("Data loaded successfully:", this.data.length, "stations");
             this.showdiv = true;
+            this.errorMessage = '';
         }).catch((error) => {
             console.error("An error occurred:", error);
+            if (error.response) {
+                console.error("Response error:", error.response.status, error.response.data);
+                this.errorMessage = `API 錯誤: ${error.response.status} - ${error.response.data.message || '請確認 API Key 是否正確'}`;
+            } else if (error.request) {
+                console.error("No response received:", error.request);
+                this.errorMessage = "無法連接到氣象局 API，請檢查網路連線";
+            } else {
+                console.error("Error:", error.message);
+                this.errorMessage = `錯誤: ${error.message}`;
+            }
             this.showdiv = false;
         });
     },
@@ -93,6 +116,20 @@ export default {
 <template>
   <NavBar />
   <div class="weather-container overflow-auto mb-7 mt-3" style="height: calc(100vh - 150px)">
+    <!-- Error Message -->
+    <div v-if="errorMessage" class="alert alert-danger m-4" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      <strong>錯誤:</strong> {{ errorMessage }}
+      <div class="mt-2 small">
+        請確認:
+        <ul class="mb-0 mt-1">
+          <li>您的 .env 檔案中有設定 VITE_CWA_KEY</li>
+          <li>API Key 是有效的 (可至 <a href="https://opendata.cwa.gov.tw/" target="_blank">氣象局開放資料平台</a> 申請)</li>
+          <li>重新啟動開發伺服器以載入環境變數</li>
+        </ul>
+      </div>
+    </div>
+
     <div class="search-panel mb-4 mt-3 p-4">
       <div class="input-group">
         <input class="form-control mr-sm-2 p-3" v-model="search" placeholder="輸入臺北/臺南/東引/澎湖等關鍵字...">
