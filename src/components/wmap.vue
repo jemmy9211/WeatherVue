@@ -122,6 +122,17 @@ export default {
   margin-bottom: 10px;
 }
 
+.map-alert .alert {
+  background: rgba(220, 53, 69, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.5);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 700;
+}
+
 .map-content {
   flex-grow: 1;
   position: relative;
@@ -131,32 +142,41 @@ export default {
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--neo-border);
+}
+
+/* Dark mode map filter */
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
 
 /* Marker color classes */
 .marker-blue img {
-  filter: hue-rotate(0deg);
+  filter: hue-rotate(0deg) drop-shadow(0 0 5px rgba(0, 122, 255, 0.5));
 }
 
 .marker-red img {
-  filter: hue-rotate(140deg);
+  filter: hue-rotate(140deg) drop-shadow(0 0 5px rgba(255, 59, 48, 0.5));
 }
 
 .marker-green img {
-  filter: hue-rotate(280deg);
+  filter: hue-rotate(280deg) drop-shadow(0 0 5px rgba(52, 199, 89, 0.5));
 }
 
 .marker-yellow img {
-  filter: hue-rotate(40deg);
+  filter: hue-rotate(40deg) drop-shadow(0 0 5px rgba(255, 204, 0, 0.5));
 }
 
 .marker-purple img {
-  filter: hue-rotate(220deg);
+  filter: hue-rotate(220deg) drop-shadow(0 0 5px rgba(175, 82, 222, 0.5));
 }
 
 .marker-orange img {
-  filter: hue-rotate(80deg);
+  filter: hue-rotate(80deg) drop-shadow(0 0 5px rgba(255, 149, 0, 0.5));
 }
 
 /* Popup styling */
@@ -170,8 +190,16 @@ export default {
 
 .leaflet-popup-content-wrapper {
   padding: 0;
-  border-radius: 8px;
-  box-shadow: 0 3px 14px rgba(0,0,0,0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--neo-border);
+  color: var(--neo-text);
+}
+
+.leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.9);
 }
 
 .map-popup-weather-block {
@@ -186,16 +214,26 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  color: white;
+  color: var(--neo-text);
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--neo-panel);
   border-radius: 8px;
   padding: 20px;
+  border: 1px solid var(--neo-border);
+  backdrop-filter: blur(12px);
 }
 
 .loading-container h5 {
   margin-top: 15px;
   line-height: 1.5;
+  color: var(--neo-text);
+  text-shadow: 0 0 10px var(--neo-glow);
+}
+
+.spinner-border {
+  color: var(--neo-accent);
+  box-shadow: 0 0 15px var(--neo-glow);
+  border-radius: 50%;
 }
 
 /* Responsive design optimization */

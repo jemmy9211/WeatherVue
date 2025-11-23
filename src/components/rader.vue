@@ -4,15 +4,42 @@
     <div v-if="showdiv" class="radar-container">
       <div class="radar-card">
         <div class="card-header">
-          <h4 style="font-size: smaller;"><span class="radar-badge">雷達整合回波圖-臺灣</span></h4>
+          <h4 style="font-size: smaller;"><span class="radar-badge">雷達整合回波圖-臺灣 (動態)</span></h4>
           <div class="last-updated" v-if="lastUpdated">
             最後更新: {{ lastUpdated }}
           </div>
         </div>
         <div class="card-body">
-          <transition name="fade">
-            <img v-bind:src="raderlink" class="radar-image" alt="雷達回波圖">
-          </transition>
+          <div class="radar-display">
+            <div v-if="isLoadingImages" class="loading-overlay">
+              <div class="spinner-small"></div>
+              <span>載入動畫中...</span>
+            </div>
+            <img 
+              v-if="currentImage"
+              :src="currentImage" 
+              class="radar-image" 
+              alt="雷達回波圖"
+            >
+            <div class="controls-overlay">
+              <div class="playback-controls">
+                <button @click="toggleAnimation" class="control-btn play-btn">
+                  <i :class="isPlaying ? 'bi bi-pause-fill' : 'bi bi-play-fill'"></i>
+                </button>
+                <div class="timeline-container">
+                  <span class="time-label">{{ currentDisplayTime }}</span>
+                  <input 
+                    type="range" 
+                    min="0" 
+                    :max="images.length - 1" 
+                    v-model.number="currentIndex" 
+                    class="timeline-slider"
+                    @input="stopAnimation"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="card-footer">
           <button @click="refreshData" class="refresh-button">
@@ -46,27 +73,123 @@ export default{
     return{
       raderlink:'',
       showdiv: false,
-      lastUpdated: ''
+      lastUpdated: '',
+      images: [],
+      currentIndex: 0,
+      isPlaying: false,
+      timer: null,
+      isLoadingImages: false
+    }
+  },
+  computed: {
+    currentImage() {
+      return this.images[this.currentIndex]?.url || this.raderlink;
+    },
+    currentDisplayTime() {
+      return this.images[this.currentIndex]?.time || '';
     }
   },
   created(){
     this.fetchData();
   },
+  beforeUnmount() {
+    this.stopAnimation();
+  },
   methods: {
     fetchData() {
+      this.showdiv = false; // Hide while fetching initial data
       axios.get(url, {
         mode: 'no-cors'
       })
       .then((res) => {
-        this.raderlink = res.data.cwaopendata.dataset.resource.ProductURL
-        this.showdiv = true
-        this.lastUpdated = new Date().toLocaleString('zh-TW')
+        const resource = res.data.cwaopendata.dataset.resource;
+        const dateTime = res.data.cwaopendata.dataset.DateTime;
+        
+        this.raderlink = resource.ProductURL;
+        this.lastUpdated = new Date(dateTime).toLocaleString('zh-TW');
+        
+        this.generateImages(dateTime);
+        this.showdiv = true;
       })
       .catch((error) => {
         console.error("An error occurred:", error)
+        this.showdiv = true; // Show even if error (might have partial data or just empty)
       })
     },
+    generateImages(latestTimeStr) {
+      const latestDate = new Date(latestTimeStr);
+      const imagesList = [];
+      // Generate last 12 images (2 hours) with 10 min interval
+      for (let i = 11; i >= 0; i--) {
+        const d = new Date(latestDate.getTime() - i * 10 * 60 * 1000);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const hour = String(d.getHours()).padStart(2, '0');
+        const minute = String(d.getMinutes()).padStart(2, '0');
+        
+        // Using CV1_1000 for better performance (smaller size)
+        // Format: https://www.cwa.gov.tw/Data/radar/CV1_1000_YYYYMMDDHHMM.png
+        const timeStr = `${year}${month}${day}${hour}${minute}`;
+        const url = `https://www.cwa.gov.tw/Data/radar/CV1_1000_${timeStr}.png`;
+        
+        imagesList.push({
+          url: url,
+          time: `${hour}:${minute}`
+        });
+      }
+      
+      this.images = imagesList;
+      this.currentIndex = this.images.length - 1;
+      this.preloadImages();
+    },
+    preloadImages() {
+      this.isLoadingImages = true;
+      let loadedCount = 0;
+      const total = this.images.length;
+      
+      this.images.forEach(imgObj => {
+        const img = new Image();
+        img.onload = () => {
+          loadedCount++;
+          if (loadedCount === total) {
+            this.isLoadingImages = false;
+            this.startAnimation();
+          }
+        };
+        img.onerror = () => {
+          loadedCount++; // Count errors too to avoid hanging
+          if (loadedCount === total) {
+            this.isLoadingImages = false;
+            this.startAnimation();
+          }
+        };
+        img.src = imgObj.url;
+      });
+    },
+    startAnimation() {
+      if (this.timer) clearInterval(this.timer);
+      this.isPlaying = true;
+      this.timer = setInterval(() => {
+        this.currentIndex = (this.currentIndex + 1) % this.images.length;
+      }, 500); // 0.5s per frame
+    },
+    stopAnimation() {
+      this.isPlaying = false;
+      if (this.timer) {
+        clearInterval(this.timer);
+        this.timer = null;
+      }
+    },
+    toggleAnimation() {
+      if (this.isPlaying) {
+        this.stopAnimation();
+      } else {
+        this.startAnimation();
+      }
+    },
     refreshData() {
+      this.stopAnimation();
       this.showdiv = false;
       setTimeout(() => {
         this.fetchData();
@@ -90,15 +213,15 @@ export default{
 }
 
 .radar-card {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--neo-panel);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--neo-border);
   border-radius: 20px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -106,17 +229,19 @@ export default{
 .radar-card:hover {
   transform: translateY(-2px);
   box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.12),
-    0 4px 12px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 20px var(--neo-glow);
+  border-color: var(--neo-accent);
 }
 
 .card-header {
   padding: 1.5rem 2rem;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--neo-surface);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--neo-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -125,8 +250,8 @@ export default{
 
 .radar-badge {
   background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 0.9) 0%, 
-    rgba(52, 199, 89, 0.9) 100%
+    var(--neo-accent) 0%, 
+    var(--neo-accent-secondary) 100%
   );
   color: white;
   padding: 0.75rem 1.5rem;
@@ -139,14 +264,14 @@ export default{
     0 4px 16px rgba(0, 122, 255, 0.2),
     0 1px 4px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .last-updated {
   font-size: 0.9rem;
-  color: rgba(40, 40, 40, 0.9);
+  color: var(--neo-muted);
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   margin-top: 5px;
 }
 
@@ -155,43 +280,142 @@ export default{
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   min-height: 400px;
 }
 
-.radar-image {
-  max-width: 100%;
-  max-height: 70vh;
-  object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+.radar-display {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 400px;
 }
 
-.radar-image:hover {
-  transform: scale(1.02);
-  box-shadow: 
-    0 12px 32px rgba(0, 0, 0, 0.15),
-    0 4px 12px rgba(0, 0, 0, 0.08);
+.loading-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1rem 2rem;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  z-index: 10;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spinner-small {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--neo-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.controls-overlay {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0 1rem;
+}
+
+.playback-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.75rem 1.25rem;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.control-btn {
+  background: var(--neo-accent);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.control-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--neo-glow);
+}
+
+.timeline-container {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.time-label {
+  color: white;
+  font-family: monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  min-width: 50px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.timeline-slider {
+  flex-grow: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.timeline-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s;
+}
+
+.timeline-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: var(--neo-accent);
 }
 
 .card-footer {
   padding: 1.5rem;
   text-align: center;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--neo-surface);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--neo-border);
 }
 
 .refresh-button {
   background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 0.9) 0%, 
-    rgba(52, 120, 246, 0.9) 100%
+    var(--neo-accent) 0%, 
+    var(--neo-accent-secondary) 100%
   );
   color: white;
   border: none;
@@ -204,19 +428,20 @@ export default{
     0 4px 16px rgba(0, 122, 255, 0.2),
     0 1px 4px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .refresh-button:hover {
   transform: translateY(-2px) scale(1.05);
   background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 1) 0%, 
-    rgba(52, 120, 246, 1) 100%
+    var(--neo-accent) 0%, 
+    var(--neo-accent-secondary) 100%
   );
   box-shadow: 
     0 6px 20px rgba(0, 122, 255, 0.3),
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 0 15px var(--neo-glow);
 }
 
 .loading-container {
@@ -234,36 +459,37 @@ export default{
   width: 60px;
   height: 60px;
   margin: 0 auto 2rem;
-  border: 5px solid rgba(255, 255, 255, 0.2);
+  border: 5px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  border-top-color: rgba(0, 122, 255, 1);
+  border-top-color: var(--neo-accent);
   animation: spin 1s ease-in-out infinite;
+  box-shadow: 0 0 15px var(--neo-glow);
 }
 
 .loading-message {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--neo-panel);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--neo-border);
   padding: 2.5rem;
   border-radius: 20px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  color: rgba(40, 40, 40, 0.9);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  color: var(--neo-text);
 }
 
 .loading-message h4 {
   margin-bottom: 1rem;
   font-weight: 600;
-  color: rgba(40, 40, 40, 0.9);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  color: var(--neo-text);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .loading-message p {
-  color: rgba(40, 40, 40, 0.8);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  color: var(--neo-muted);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -378,22 +604,19 @@ export default{
     font-size: 0.9rem;
   }
   
-  .loading-message {
-    padding: 2rem 1.5rem;
+  .playback-controls {
+    padding: 0.5rem 1rem;
+    gap: 0.75rem;
   }
   
-  .loading-message h4 {
-    font-size: 1.1rem;
+  .control-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
   }
   
-  .loading-message p {
-    font-size: 0.95rem;
-  }
-  
-  .spinner {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 1.5rem;
+  .time-label {
+    font-size: 0.9rem;
   }
 }
 

@@ -95,49 +95,49 @@ export default {
 
 <style>
 .main-container {
-  max-width: 1400px;
-  margin: 2rem auto;
-  padding: 1rem;
+  width: min(1200px, calc(100% - 2rem));
+  margin: 0 auto 2rem auto;
+  padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 
 .location-header {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--neo-panel);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid var(--neo-border);
+  color: var(--neo-text);
   padding: 1.5rem;
   border-radius: 20px;
   margin-bottom: 2rem;
   text-align: center;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .location-header:hover {
   transform: translateY(-2px);
   box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.12),
-    0 4px 12px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 20px var(--neo-glow);
 }
 
 .location-header h3 {
   background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 1) 0%,
-    rgba(52, 199, 89, 1) 50%,
-    rgba(255, 149, 0, 1) 100%
+    var(--neo-accent) 0%,
+    var(--neo-accent-secondary) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .forecast-container {
@@ -148,18 +148,18 @@ export default {
   overflow: auto;
   padding: 1.5rem;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--neo-surface);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--neo-border);
   box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.06),
-    0 1px 4px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 4px 24px rgba(0, 0, 0, 0.2),
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .forecast-row {
-  width: 90%;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
@@ -167,26 +167,26 @@ export default {
 }
 
 .map-container {
-  width: 90%;
+  width: 100%;
   margin-top: 2rem;
 }
 
 .map-title {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--neo-panel);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--neo-border);
   border-bottom: none;
-  color: #000000;
+  color: var(--neo-text);
   padding: 1.5rem;
   border-radius: 20px 20px 0 0;
   margin-bottom: 0;
   font-weight: 700;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.06),
-    0 1px 4px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .map-wrapper {
@@ -194,11 +194,19 @@ export default {
   width: 100%;
   border-radius: 0 0 20px 20px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--neo-border);
   border-top: none;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.04);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode map filter */
+.map-wrapper .leaflet-layer,
+.map-wrapper .leaflet-control-zoom-in,
+.map-wrapper .leaflet-control-zoom-out,
+.map-wrapper .leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
 
 /* Custom scrollbar for forecast container */
@@ -207,14 +215,14 @@ export default {
 }
 
 .forecast-container::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
 }
 
 .forecast-container::-webkit-scrollbar-thumb {
   background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 0.6) 0%, 
-    rgba(52, 199, 89, 0.6) 100%
+    var(--neo-accent) 0%, 
+    var(--neo-accent-secondary) 100%
   );
   border-radius: 10px;
   border: 2px solid transparent;
@@ -223,10 +231,11 @@ export default {
 
 .forecast-container::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 0.8) 0%, 
-    rgba(52, 199, 89, 0.8) 100%
+    var(--neo-accent) 0%, 
+    var(--neo-accent-secondary) 100%
   );
   background-clip: content-box;
+  box-shadow: 0 0 10px var(--neo-glow);
 }
 
 /* Responsive design optimization */

@@ -22,19 +22,21 @@ export default {
 
 <style>
 .main-navbar {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 1.25rem 1.5rem;
+  background: rgba(11, 17, 32, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--neo-border);
+  border-radius: 24px;
+  padding: 0.75rem var(--neo-spacing);
   position: sticky;
-  top: 0;
+  top: 1rem;
   z-index: 1000;
-  box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.08),
-    0 1px 4px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  margin: 0 auto 1.5rem auto;
+  width: min(1200px, calc(100% - 2rem));
 }
 
 .container-fluid {
@@ -43,95 +45,86 @@ export default {
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  gap: var(--neo-spacing);
 }
 
 .navbar-brand {
   text-decoration: none;
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.25s ease;
+  color: var(--neo-text);
 }
 
 .navbar-brand h5 {
   margin: 0;
-  background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 1) 0%,
-    rgba(52, 199, 89, 1) 50%,
-    rgba(255, 149, 0, 1) 100%
-  );
+  background: linear-gradient(135deg, var(--neo-accent), #fff);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
   font-size: 1.3rem;
-  letter-spacing: 0.02em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 20px var(--neo-glow);
 }
 
 .navbar-brand:hover {
   transform: translateY(-1px) scale(1.02);
 }
 
-.navbar-brand:hover h5 {
-  background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 1) 0%,
-    rgba(52, 199, 89, 1) 30%,
-    rgba(255, 149, 0, 1) 60%,
-    rgba(255, 45, 85, 1) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-}
-
 .nav-links {
   display: flex;
-  gap: 0.25rem;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 16px;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--neo-border);
+  border-radius: var(--neo-panel-radius);
   overflow: hidden;
-  padding: 0.25rem;
-  box-shadow: 
-    0 2px 12px rgba(0, 0, 0, 0.06),
-    0 1px 3px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: 0.35rem 0.5rem;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
 }
 
 .nav-btn {
-  padding: 0.75rem 1.25rem;
+  padding: 0.65rem 1.25rem;
   text-decoration: none;
-  color: rgba(40, 40, 40, 0.9);
+  color: var(--neo-muted);
   background: transparent;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
   border-radius: 12px;
   font-size: 0.9rem;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.05em;
   position: relative;
   overflow: hidden;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  border: 1px solid transparent;
+}
+
+.nav-btn:hover {
+  color: var(--neo-text);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--neo-border);
+  text-shadow: 0 0 8px var(--neo-glow);
+}
+
+.nav-btn.router-link-active {
+  color: var(--neo-bg);
+  background: var(--neo-accent);
+  font-weight: 700;
+  box-shadow: 0 0 15px var(--neo-glow);
+  border-color: var(--neo-accent);
 }
 
 .nav-btn::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.15);
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(0, 0, 0, 0.05), transparent 55%);
   opacity: 0;
   transition: opacity 0.3s ease;
-  border-radius: 12px;
 }
 
 .nav-btn:hover {
-  color: rgba(20, 20, 20, 1);
-  transform: translateY(-1px);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    0 1px 3px rgba(0, 0, 0, 0.04);
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.4);
+  color: var(--neo-accent);
+  border-color: var(--neo-border-strong);
+  box-shadow: 0 0 20px var(--neo-glow);
 }
 
 .nav-btn:hover::before {
@@ -139,20 +132,21 @@ export default {
 }
 
 .router-link-active.nav-btn {
-  background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 0.9) 0%, 
-    rgba(52, 120, 246, 0.9) 100%
-  );
-  color: white;
-  box-shadow: 
-    0 3px 12px rgba(0, 122, 255, 0.25),
-    0 1px 3px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, var(--neo-accent), var(--neo-accent-secondary));
+  border-color: var(--neo-border-strong);
+  color: #fff;
+  box-shadow:
+    0 0 25px var(--neo-glow),
+    0 12px 24px rgba(0, 0, 0, 0.05);
 }
 
 .router-link-active.nav-btn::before {
   display: none;
+}
+
+.nav-btn i {
+  color: var(--neo-accent);
+  margin-right: 0.4rem;
 }
 
 /* Responsive design optimization */
@@ -162,12 +156,12 @@ export default {
   }
   
   .navbar-brand h5 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
   
   .nav-btn {
-    padding: 0.7rem 1.15rem;
-    font-size: 0.875rem;
+    padding: 0.7rem 1.1rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -184,10 +178,11 @@ export default {
   .nav-links {
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
   }
   
   .nav-btn {
-    padding: 0.6rem 1rem;
+    padding: 0.65rem 1rem;
     font-size: 0.85rem;
   }
 }
@@ -200,14 +195,14 @@ export default {
   .nav-btn {
     flex: 1;
     text-align: center;
-    min-width: calc(50% - 0.125rem);
+    min-width: calc(50% - 0.175rem);
   }
 }
 
 @media (max-width: 576px) {
   /* Small mobile styles */
   .main-navbar {
-    padding: 0.75rem 0.5rem;
+    padding: 0.75rem 0.65rem;
   }
   
   .container-fluid {
@@ -218,33 +213,29 @@ export default {
     font-size: 0.95rem;
   }
   
-  .navbar-brand h5 i {
-    font-size: 0.9rem;
-  }
-  
   .nav-links {
-    padding: 0.15rem;
-    gap: 0.15rem;
-    border-radius: 12px;
+    padding: 0.2rem;
+    gap: 0.2rem;
+    border-radius: 14px;
   }
   
   .nav-btn {
     padding: 0.55rem 0.7rem;
-    font-size: 0.75rem;
-    border-radius: 9px;
-    letter-spacing: 0;
+    font-size: 0.78rem;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
   }
 }
 
 @media (max-width: 420px) {
   /* Extra small mobile styles */
   .navbar-brand h5 {
-    font-size: 0.875rem;
+    font-size: 0.88rem;
   }
   
   .nav-btn {
     padding: 0.5rem 0.6rem;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     border-radius: 8px;
   }
 }
@@ -256,7 +247,7 @@ export default {
   }
   
   .navbar-brand {
-    -webkit-tap-highlight-color: rgba(0, 122, 255, 0.1);
+    -webkit-tap-highlight-color: rgba(0, 240, 255, 0.1);
   }
 }
 </style>

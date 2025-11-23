@@ -82,64 +82,64 @@ export default {
 
 <style scoped>
 .info-page {
-  background: linear-gradient(135deg, rgba(30, 87, 153, 0.3), rgba(32, 124, 202, 0.3));
+  background: var(--neo-bg);
   min-height: 100vh;
   padding-bottom: 100px;
 }
 
 .header-section h1 {
   background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 1) 0%,
-    rgba(52, 199, 89, 1) 50%,
-    rgba(255, 149, 0, 1) 100%
+    var(--neo-accent) 0%,
+    var(--neo-accent-secondary) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .header-section p {
-  color: rgba(40, 40, 40, 0.9);
+  color: var(--neo-text);
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .info-card {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--neo-panel);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--neo-border);
   border-radius: 20px;
   padding: 2.5rem;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .info-card:hover {
   transform: translateY(-2px);
   box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.12),
-    0 4px 12px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 20px var(--neo-glow);
 }
 
 .info-text {
-  color: rgba(40, 40, 40, 0.9);
+  color: var(--neo-text);
   font-size: 1.1rem;
   line-height: 1.7;
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .feature-heading {
   background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 1) 0%,
-    rgba(52, 199, 89, 1) 100%
+    var(--neo-accent) 0%,
+    var(--neo-accent-secondary) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -147,53 +147,55 @@ export default {
   font-weight: 700;
   position: relative;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 2px solid var(--neo-border);
 }
 
 .feature-item {
   display: flex;
   align-items: flex-start;
   padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--neo-surface);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--neo-border);
   border-radius: 16px;
   height: 100%;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.06),
-    0 1px 4px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    0 1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .feature-item:hover {
   transform: translateY(-4px) scale(1.02);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 15px var(--neo-glow);
+  border-color: var(--neo-accent);
 }
 
 .feature-item p {
-  color: rgba(40, 40, 40, 0.9);
+  color: var(--neo-muted);
   font-weight: 500;
   margin: 0;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .icon {
   font-size: 1.5rem;
   background: linear-gradient(135deg, 
-    rgba(0, 122, 255, 1) 0%,
-    rgba(52, 199, 89, 1) 100%
+    var(--neo-accent) 0%,
+    var(--neo-accent-secondary) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   margin-right: 1rem;
   flex-shrink: 0;
+  filter: drop-shadow(0 0 5px var(--neo-glow));
 }
 
 .divider {
@@ -208,23 +210,23 @@ export default {
   height: 2px;
   background: linear-gradient(90deg, 
     transparent 0%,
-    rgba(255, 255, 255, 0.4) 50%,
+    var(--neo-border) 50%,
     transparent 100%
   );
 }
 
 .glass-footer {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--neo-panel);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--neo-border);
   padding: 2rem 0;
   margin-top: auto;
-  color: rgba(40, 40, 40, 0.9);
+  color: var(--neo-text);
   box-shadow: 
-    0 -4px 24px rgba(0, 0, 0, 0.08),
-    0 -1px 4px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 -4px 24px rgba(0, 0, 0, 0.2),
+    0 -1px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* Responsive design optimization */
