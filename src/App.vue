@@ -19,10 +19,10 @@
   --neo-text: #e2e8f0;
   --neo-muted: #94a3b8;
   --neo-glow: rgba(0, 242, 255, 0.15);
-  --neo-card-radius: 16px;
-  --neo-panel-radius: 20px;
-  --neo-spacing: clamp(1rem, 2vw, 1.5rem);
-  --neo-font-base: 'Space Grotesk', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --neo-card-radius: 12px;
+  --neo-panel-radius: 16px;
+  --neo-spacing: clamp(0.75rem, 1.5vw, 1.25rem);
+  --neo-font-base: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 
 html {
@@ -31,75 +31,79 @@ html {
 
 body {
   background-color: var(--neo-bg);
+  /* 簡化背景 - 移除網格圖案以提升效能 */
   background-image:
-    radial-gradient(circle at 15% 50%, rgba(0, 242, 255, 0.08) 0%, transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(188, 19, 254, 0.08) 0%, transparent 25%),
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 50px 50px, 50px 50px;
-  background-position: center;
+    radial-gradient(ellipse at 15% 50%, rgba(0, 242, 255, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 85% 30%, rgba(188, 19, 254, 0.06) 0%, transparent 40%);
+  background-size: 100% 100%;
   background-attachment: fixed;
   color: var(--neo-text);
   font-family: var(--neo-font-base);
-  font-size: 16px;
-  line-height: 1.7;
-  letter-spacing: 0.02em;
+  font-size: 15px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
   min-height: 100vh;
   margin: 0;
   padding: var(--neo-spacing);
-}
-
-#app {
-  min-height: calc(100vh - var(--neo-spacing));
-}
-
-a {
-  color: var(--neo-accent);
-  transition: color 0.2s ease;
-}
-
-a:hover,
-a:focus-visible {
-  color: var(--neo-accent-secondary);
-}
-
-::selection {
-  background: var(--neo-accent-secondary);
-  color: #04060f;
-}
-
-/* Responsive body adjustments */
-@media (max-width: 992px) {
-  body {
-    background-attachment: scroll;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Mobile body styles */
-  body {
-    background-size: cover;
-    background-position: center top;
-  }
-}
-
-@media (max-width: 576px) {
-  /* Small mobile body styles */
-  body {
-    background-size: auto 100vh;
-  }
-}
-
-/* Prevent horizontal scroll on mobile */
-body {
   overflow-x: hidden;
   width: 100%;
 }
 
-/* Optimize for touch devices */
+#app {
+  min-height: calc(100vh - var(--neo-spacing) * 2);
+}
+
+a {
+  color: var(--neo-accent);
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--neo-accent-secondary);
+}
+
+::selection {
+  background: var(--neo-accent);
+  color: #04060f;
+}
+
+/* 手機版優化 */
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+    padding: 0.5rem;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  body {
+    /* 手機上移除背景光暈以提升效能 */
+    background-image: none;
+    padding: 0.4rem;
+  }
+}
+
+/* 觸控優化 */
 @media (hover: none) and (pointer: coarse) {
   body {
     -webkit-overflow-scrolling: touch;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* 增加觸控目標大小 */
+  a, button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* 減少動畫 - 針對偏好減少動態效果的使用者 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 </style>

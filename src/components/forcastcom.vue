@@ -5,7 +5,7 @@ export default {
     components: {
         WeatherVisual
     },
-    props: ['forcastdata'],
+    props: ['forcastdata', 'index'],
     data(){
         return{
             data: [],
@@ -15,6 +15,15 @@ export default {
             MinT: [],
             PoPL: [],
             Wx: []
+        }
+    },
+    computed: {
+        periodLabel() {
+            const labels = ['現在', '第二時段', '第三時段'];
+            return labels[this.index] || '';
+        },
+        isHighRain() {
+            return parseInt(this.PoPL) >= 60;
         }
     },
     created(){
@@ -30,296 +39,363 @@ export default {
 </script>
 
 <template>
-    <div class="forecast-card">
-        <div class="time-header">
-            <h5>{{ stime }}點 ~ {{ etime }}點</h5>
-        </div>
-        <div class="weather-condition">
-            <div class="forecast-icon-wrapper">
-                <WeatherVisual :weather="Wx" />
-            </div>
-            <h4><strong>{{ Wx }}</strong></h4>
-        </div>
-        <div class="temp-section">
-            <label>最高溫: {{ MaxT }}°</label>
-            <div class="progress">
-                <div class="progress-bar bg-danger" v-bind:style="{'width': parseInt(MaxT)*2 +'%'}"></div>
+    <article class="forecast-card">
+        <!-- 時間標題 -->
+        <header class="card-header">
+            <span class="period-label" v-if="periodLabel">{{ periodLabel }}</span>
+            <span class="time-range">{{ stime }}:00 - {{ etime }}:00</span>
+        </header>
+        
+        <!-- 主要內容：三欄式 -->
+        <div class="card-body">
+            <!-- 左側：天氣圖示 -->
+            <div class="weather-visual">
+                <WeatherVisual :weather="Wx" class="icon" />
+                <span class="wx-text">{{ Wx }}</span>
             </div>
             
-            <label>最低溫: {{ MinT }}°</label>
-            <div class="progress">
-                <div class="progress-bar bg-success" v-bind:style="{'width': parseInt(MinT)*2 +'%'}"></div>
+            <!-- 中間：溫度 -->
+            <div class="temp-display">
+                <div class="temp-main">
+                    <span class="temp-high">{{ MaxT }}°</span>
+                    <span class="temp-sep">/</span>
+                    <span class="temp-low">{{ MinT }}°</span>
+                </div>
+                <span class="temp-label">高溫 / 低溫</span>
+            </div>
+            
+            <!-- 右側：降雨機率 -->
+            <div class="rain-prob">
+                <div class="rain-value" :class="{ 'high-rain': isHighRain }">
+                    <i class="bi bi-droplet-fill"></i>
+                    <span>{{ PoPL }}%</span>
+                </div>
+                <span class="rain-label">降雨機率</span>
             </div>
         </div>
-        
-        <div class="pop-section">
-            <h5>降雨機率 {{ PoPL }}%</h5>
-            <div class="progress">
-                <div class="progress-bar bg-info" v-bind:style="{'width': parseInt(PoPL) +'%'}"></div>
-            </div>
-        </div>
-    </div>
+    </article>
 </template>
 
-<style>
+<style scoped>
 .forecast-card {
-  background: var(--neo-panel);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  background: rgba(30, 41, 59, 0.8);
   border: 1px solid var(--neo-border);
-  color: var(--neo-text);
-  padding: 2rem;
-  border-radius: 20px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    0 2px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  margin-bottom: 1.5rem;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
 }
 
 .forecast-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 0 20px var(--neo-glow);
-  border-color: var(--neo-accent);
+  border-color: rgba(var(--neo-accent-rgb, 0, 242, 255), 0.4);
 }
 
-.time-header {
+/* 卡片標題 */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(0, 0, 0, 0.25);
   border-bottom: 1px solid var(--neo-border);
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
 }
 
-.time-header h5 {
-  color: var(--neo-text);
-  font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  margin: 0;
+.period-label {
+  background: linear-gradient(135deg, var(--neo-accent), var(--neo-accent-secondary, #00d4aa));
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  text-transform: uppercase;
 }
 
-.weather-condition {
-  margin: 1.5rem 0;
+.time-range {
+  color: var(--neo-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* 主體內容 - 三欄式 */
+.card-body {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0.85rem;
+  gap: 0.75rem;
+}
+
+/* 天氣圖示區 */
+.weather-visual {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
-.forecast-icon-wrapper {
+.weather-visual .icon {
+  width: 48px;
+  height: 48px;
+}
+
+.wx-text {
+  font-size: 0.65rem;
+  color: var(--neo-muted);
+  text-align: center;
+  max-width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 溫度顯示區 */
+.temp-display {
   display: flex;
-  justify-content: center;
-  transform: scale(1.2);
-  margin-bottom: 0.5rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0 0.75rem;
+  border-left: 1px solid var(--neo-border);
+  border-right: 1px solid var(--neo-border);
 }
 
-.weather-condition h4 {
-  color: var(--neo-text);
-  margin: 0;
-  font-size: 1.2rem;
+.temp-main {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
 }
 
-.weather-condition strong {
-  background: linear-gradient(135deg, var(--neo-accent), #fff);
+.temp-high {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.temp-section {
-  margin-bottom: 1.5rem;
+.temp-sep {
+  font-size: 1rem;
+  color: var(--neo-muted);
+  margin: 0 0.1rem;
 }
 
-.temp-section label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+.temp-low {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--neo-accent);
+}
+
+.temp-label {
+  font-size: 0.6rem;
   color: var(--neo-muted);
 }
 
-.progress {
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  overflow: hidden;
+/* 降雨機率區 */
+.rain-prob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
 }
 
-.progress-bar {
-  border-radius: 10px;
-  transition: width 1s ease-in-out;
-}
-
-.bg-danger {
-  background: linear-gradient(90deg, #ff416c, #ff4b2b) !important;
-  box-shadow: 0 0 10px rgba(255, 75, 43, 0.5);
-}
-
-.bg-success {
-  background: linear-gradient(90deg, #00b09b, #96c93d) !important;
-  box-shadow: 0 0 10px rgba(150, 201, 61, 0.5);
-}
-
-.bg-info {
-  background: linear-gradient(90deg, var(--neo-accent), var(--neo-accent-secondary)) !important;
-  box-shadow: 0 0 10px var(--neo-glow);
-}
-
-.pop-section h5 {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+.rain-value {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: var(--neo-text);
 }
 
-/* Responsive design optimization */
-@media (max-width: 1200px) {
-  .forecast-card {
-    padding: 1.75rem;
-    border-radius: 18px;
+.rain-value i {
+  font-size: 0.9rem;
+  color: #60a5fa;
+}
+
+.rain-value.high-rain {
+  color: #60a5fa;
+}
+
+.rain-value.high-rain i {
+  color: #3b82f6;
+}
+
+.rain-label {
+  font-size: 0.6rem;
+  color: var(--neo-muted);
+}
+
+/* 響應式 - 平板 */
+@media (max-width: 992px) {
+  .card-body {
+    padding: 0.75rem;
+    gap: 0.6rem;
   }
   
-  .time-header h5 {
-    font-size: 1.05rem;
+  .weather-visual .icon {
+    width: 42px;
+    height: 42px;
   }
   
-  .weather-condition h4 {
+  .temp-high {
+    font-size: 1.35rem;
+  }
+  
+  .temp-low {
     font-size: 1.15rem;
   }
-}
-
-@media (max-width: 992px) {
-  /* Tablet styles */
-  .forecast-card {
-    padding: 1.5rem;
-    border-radius: 18px;
-    margin-bottom: 1.25rem;
-  }
   
-  .time-header {
-    padding-bottom: 0.6rem;
-    margin-bottom: 1.25rem;
-  }
-  
-  .time-header h5 {
+  .rain-value {
     font-size: 1rem;
   }
-  
-  .weather-condition {
-    margin: 1.25rem 0;
-  }
-  
-  .weather-condition h4 {
-    font-size: 1.1rem;
-  }
-  
-  .temp-section, .pop-section {
-    margin: 1.25rem 0;
-  }
-  
-  .progress {
-    height: 0.95rem;
-    margin-bottom: 0.875rem;
-  }
-  
-  label {
-    font-size: 0.95rem;
-  }
 }
 
+/* 響應式 - 手機 */
 @media (max-width: 768px) {
-  /* Mobile layout-only adjustments */
   .forecast-card {
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-  }
-  
-  .time-header {
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
-  }
-}
-
-@media (max-width: 576px) {
-  /* Small mobile styles */
-  .forecast-card {
-    padding: 1rem;
-    border-radius: 14px;
-    margin-bottom: 0.875rem;
-  }
-  
-  .time-header {
-    padding-bottom: 0.4rem;
-    margin-bottom: 0.875rem;
-  }
-  
-  .time-header h5 {
-    font-size: 0.9rem;
-  }
-  
-  .weather-condition {
-    margin: 0.875rem 0;
-  }
-  
-  .weather-condition h4 {
-    font-size: 1rem;
-  }
-  
-  .temp-section, .pop-section {
-    margin: 0.875rem 0;
-  }
-  
-  .temp-section h5, .pop-section h5 {
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .progress {
-    height: 0.75rem;
-    margin-bottom: 0.625rem;
-    border-radius: 6px;
-  }
-  
-  .progress-bar {
-    border-radius: 6px;
-  }
-  
-  label {
-    font-size: 0.85rem;
-    margin-bottom: 0.35rem;
-  }
-}
-
-@media (max-width: 420px) {
-  /* Extra small mobile styles */
-  .forecast-card {
-    padding: 0.875rem;
     border-radius: 12px;
   }
   
-  .time-header h5 {
-    font-size: 0.85rem;
+  .card-header {
+    padding: 0.5rem 0.75rem;
   }
   
-  .weather-condition h4 {
+  .period-label {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.4rem;
+  }
+  
+  .time-range {
+    font-size: 0.7rem;
+  }
+  
+  .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.75rem;
+    gap: 0.5rem;
+  }
+  
+  .weather-visual {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+  
+  .weather-visual .icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+  }
+  
+  .wx-text {
+    font-size: 0.65rem;
+    max-width: 50px;
+  }
+  
+  .temp-display {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0 0.5rem;
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
+  
+  .temp-main {
+    gap: 0.1rem;
+  }
+  
+  .temp-high {
+    font-size: 1.15rem;
+  }
+  
+  .temp-low {
     font-size: 0.95rem;
   }
   
-  .temp-section h5, .pop-section h5 {
-    font-size: 0.85rem;
+  .temp-label {
+    display: none;
   }
   
-  label {
-    font-size: 0.8rem;
+  .rain-prob {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.2rem;
+    flex-shrink: 0;
+  }
+  
+  .rain-value {
+    font-size: 0.9rem;
+    gap: 0.15rem;
+  }
+  
+  .rain-value i {
+    font-size: 0.75rem;
+  }
+  
+  .rain-label {
+    display: none;
   }
 }
 
-/* Touch-friendly improvements */
-@media (hover: none) and (pointer: coarse) {
-  .forecast-card {
-    -webkit-tap-highlight-color: rgba(0, 122, 255, 0.1);
+/* 響應式 - 小螢幕手機 */
+@media (max-width: 576px) {
+  .card-header {
+    padding: 0.4rem 0.6rem;
+  }
+  
+  .period-label {
+    font-size: 0.55rem;
+    padding: 0.12rem 0.35rem;
+  }
+  
+  .time-range {
+    font-size: 0.65rem;
+  }
+  
+  .card-body {
+    padding: 0.5rem 0.6rem;
+    gap: 0.4rem;
+  }
+  
+  .weather-visual .icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .wx-text {
+    font-size: 0.6rem;
+    max-width: 40px;
+  }
+  
+  .temp-display {
+    padding: 0 0.35rem;
+    border-left: none;
+    border-right: none;
+  }
+  
+  .temp-high {
+    font-size: 1rem;
+  }
+  
+  .temp-sep {
+    font-size: 0.85rem;
+  }
+  
+  .temp-low {
+    font-size: 0.85rem;
+  }
+  
+  .rain-value {
+    font-size: 0.8rem;
+  }
+  
+  .rain-value i {
+    font-size: 0.7rem;
   }
 }
 </style>

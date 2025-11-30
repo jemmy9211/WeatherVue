@@ -10,7 +10,7 @@ export default {
         return {
             data: [],
             search: '',
-            searchkey: '',
+            selectedCounty: '',
             showdiv: false,
             showcurrent: false,
             currentlocationx: '',
@@ -51,15 +51,23 @@ export default {
     },
     computed: {
         filteredList() {
-            this.searchkey = this.search;
-            this.searchkey = this.searchkey.replace('台', '臺');
-            //console.log(this.searchkey)
-            var aset = this.data.filter(item => item.GeoInfo.CountyName.includes(this.searchkey));
-            var bset = this.data.filter(item => item.StationName.includes(this.searchkey));
-            var abset = aset.concat(bset.filter((e) => { return aset.indexOf(e) === -1; }));
+            let result = this.data;
+            
+            // 先用縣市篩選
+            if (this.selectedCounty) {
+                result = result.filter(item => item.GeoInfo.CountyName === this.selectedCounty);
+            }
+            
+            // 再用關鍵字搜尋
+            if (this.search) {
+                const searchkey = this.search.replace('台', '臺');
+                var aset = result.filter(item => item.GeoInfo.CountyName.includes(searchkey));
+                var bset = result.filter(item => item.StationName.includes(searchkey));
+                result = aset.concat(bset.filter((e) => { return aset.indexOf(e) === -1; }));
+            }
             
             // First sort based on whether temperature is -99 (move those to the end)
-            abset.sort((a, b) => {
+            result.sort((a, b) => {
                 const tempA = parseFloat(a.WeatherElement.AirTemperature);
                 const tempB = parseFloat(b.WeatherElement.AirTemperature);
                 
@@ -71,7 +79,7 @@ export default {
             
             // Then apply temperature sorting if enabled
             if (this.isSortedByTemperature) {
-                return [...abset].sort((a, b) => {
+                return [...result].sort((a, b) => {
                     const tempA = parseFloat(a.WeatherElement.AirTemperature);
                     const tempB = parseFloat(b.WeatherElement.AirTemperature);
                     
@@ -84,7 +92,7 @@ export default {
                 });
             }
             
-            return abset;
+            return result;
         }
     },
     methods: {
@@ -100,47 +108,50 @@ export default {
         },
         toggleViewMode() {
             this.viewMode = this.viewMode === 'grid' ? 'list' : 'grid';
+        },
+        clearFilters() {
+            this.selectedCounty = '';
+            this.search = '';
         }
     }
 };
 </script>
 
 <template>
-  <NavBar />
+  <NavBar 
+    :showFilter="true"
+    v-model:selectedCounty="selectedCounty"
+    v-model:search="search"
+    @clear="clearFilters"
+  />
   <main class="page-shell">
   <section class="weather-container">
     <!-- Error Message -->
-    <div v-if="errorMessage" class="alert alert-danger m-4" role="alert">
+    <div v-if="errorMessage" class="alert alert-danger" role="alert">
       <i class="bi bi-exclamation-triangle-fill me-2"></i>
       <strong>錯誤:</strong> {{ errorMessage }}
-      <div class="mt-2 small">
-        請確認:
-        <ul class="mb-0 mt-1">
-          <li>您的 .env 檔案中有設定 VITE_CWA_KEY</li>
-          <li>API Key 是有效的 (可至 <a href="https://opendata.cwa.gov.tw/" target="_blank">氣象局開放資料平台</a> 申請)</li>
-          <li>重新啟動開發伺服器以載入環境變數</li>
-        </ul>
-      </div>
     </div>
 
-    <div class="search-panel">
-      <div class="input-group">
-        <input class="neo-input" v-model="search" placeholder="輸入臺北/臺南/東引/澎湖等關鍵字...">
-        <button type="button" class="btn btn-primary">
-          <i class="bi bi-search"></i>
-        </button>
-        <button type="button" class="temp-sort-btn" @click="toggleTemperatureSort" 
+    <!-- 功能按鈕列 -->
+    <div class="action-bar">
+      <div class="result-count">
+        <i class="bi bi-pin-map-fill"></i>
+        <span>{{ filteredList.length }} 個站點</span>
+      </div>
+      <div class="action-buttons">
+        <button type="button" class="action-btn" @click="toggleTemperatureSort" 
           :class="{ 'active': isSortedByTemperature, 'active-low': isSortedByTemperature && sortDirection === 'low-to-high' }">
           <i class="bi" :class="{
             'bi-thermometer-high': !isSortedByTemperature,
             'bi-sort-numeric-down-alt': isSortedByTemperature && sortDirection === 'high-to-low',
             'bi-sort-numeric-up': isSortedByTemperature && sortDirection === 'low-to-high'
           }"></i>
-          {{ !isSortedByTemperature ? '依溫度排序' : 
-             sortDirection === 'high-to-low' ? '溫度 (高→低)' : '溫度 (低→高)' }}
+          <span>{{ !isSortedByTemperature ? '溫度排序' : 
+             sortDirection === 'high-to-low' ? '高→低' : '低→高' }}</span>
         </button>
-        <button type="button" class="temp-sort-btn ghost" @click="toggleViewMode" title="切換檢視模式">
+        <button type="button" class="action-btn ghost" @click="toggleViewMode" title="切換檢視模式">
           <i class="bi" :class="viewMode === 'grid' ? 'bi-list-ul' : 'bi-grid-3x3-gap-fill'"></i>
+          <span>{{ viewMode === 'grid' ? '列表' : '格狀' }}</span>
         </button>
       </div>
     </div>
@@ -178,132 +189,96 @@ export default {
 
 /* Sci-Fi Minimalist Design System */
 .weather-container {
-  background: var(--neo-panel);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(30, 41, 59, 0.7);
   border: 1px solid var(--neo-border);
   border-radius: var(--neo-panel-radius);
-  padding: clamp(1rem, 2vw, 1.75rem);
-  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   color: var(--neo-text);
   min-height: calc(100vh - 150px);
   display: flex;
   flex-direction: column;
-  gap: var(--neo-spacing);
+  gap: 0.75rem;
 }
 
 .weather-container * {
   color: inherit;
 }
 
-.search-panel {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--neo-border);
-  border-radius: var(--neo-panel-radius);
-  padding: clamp(1rem, 2vw, 1.5rem);
-  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2);
-  transition: border-color 0.3s ease, transform 0.3s ease;
-}
-
-.search-panel:hover {
-  border-color: var(--neo-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px var(--neo-glow);
-}
-
-.input-group {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: clamp(0.5rem, 1.5vw, 1rem);
+/* 功能列 */
+.action-bar {
+  display: flex;
   align-items: center;
-}
-
-.neo-input {
-  background: rgba(0, 0, 0, 0.2);
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.15);
   border: 1px solid var(--neo-border);
-  border-radius: 14px;
-  color: var(--neo-text);
-  font-family: var(--neo-font-base);
-  font-size: 1rem;
-  padding: 0.85rem 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
 }
 
-.neo-input::placeholder {
+.result-count {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   color: var(--neo-muted);
+  font-size: 0.8rem;
 }
 
-.neo-input:focus {
-  outline: none;
-  border-color: var(--neo-accent);
-  box-shadow: 0 0 18px var(--neo-glow);
-  background: rgba(0, 0, 0, 0.4);
+.result-count i {
+  color: var(--neo-accent);
+  font-size: 0.85rem;
 }
 
-.btn-primary {
-  background: linear-gradient(135deg, var(--neo-accent), var(--neo-accent-secondary));
-  border: 1px solid transparent;
-  border-radius: 14px;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: 0.08em;
-  padding: 0.85rem 1rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+.action-buttons {
+  display: flex;
+  gap: 0.4rem;
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 20px var(--neo-glow);
-}
-
-.temp-sort-btn {
+.action-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.85rem 1.1rem;
-  border-radius: 14px;
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--neo-border);
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   color: var(--neo-text);
   font-family: var(--neo-font-base);
-  font-weight: 600;
-  gap: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-weight: 500;
+  font-size: 0.75rem;
+  gap: 0.35rem;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
-.temp-sort-btn.ghost {
+.action-btn.ghost {
   background: transparent;
   border-style: dashed;
 }
 
-.temp-sort-btn:hover {
+.action-btn:hover {
   border-color: var(--neo-accent);
   color: var(--neo-accent);
-  box-shadow: 0 0 18px var(--neo-glow);
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px var(--neo-glow);
 }
 
-.temp-sort-btn.active {
+.action-btn.active {
   background: linear-gradient(135deg, var(--neo-accent), var(--neo-accent-secondary));
   border-color: transparent;
   color: #fff;
-  box-shadow: 0 0 20px var(--neo-glow);
 }
 
-.temp-sort-btn.active-low {
+.action-btn.active-low {
   background: linear-gradient(135deg, #e83e8c, var(--neo-accent));
 }
 
-.temp-sort-btn i {
-  font-size: 1.1rem;
-  color: var(--neo-accent);
+.action-btn i {
+  font-size: 0.85rem;
 }
 
-.temp-sort-btn.active i {
+.action-btn.active i {
   color: #fff;
 }
 
@@ -314,27 +289,24 @@ export default {
 }
 
 .weather-data {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.15);
   border: 1px solid var(--neo-border);
-  border-radius: var(--neo-card-radius);
-  padding: clamp(1rem, 1.8vw, 1.5rem);
-  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: clamp(0.5rem, 1.2vw, 1rem);
 }
 
 .weather-data.grid-view {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: clamp(0.5rem, 1vw, 0.85rem);
 }
 
 .loading-container {
-  background: var(--neo-surface);
-  border: 1px solid var(--neo-border-strong);
-  border-radius: var(--neo-panel-radius);
-  padding: clamp(2rem, 5vw, 3rem);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--neo-border);
+  border-radius: 16px;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  letter-spacing: 0.1em;
 }
 
 .spinner-border {
@@ -343,15 +315,17 @@ export default {
 
 .alert {
   margin: 0;
-  border-radius: var(--neo-card-radius);
+  border-radius: 12px;
   background: rgba(220, 53, 69, 0.1);
   border: 1px solid rgba(220, 53, 69, 0.2);
   color: #ff6b6b;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
 }
 
-/* 滾動條科幻風格 */
+/* 滾動條簡化 */
 .weather-scroll::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .weather-scroll::-webkit-scrollbar-track {
@@ -359,32 +333,81 @@ export default {
 }
 
 .weather-scroll::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--neo-accent), var(--neo-accent-secondary));
-  border-radius: 10px;
-}
-
-.weather-scroll::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, var(--neo-accent), var(--neo-accent-secondary));
-  box-shadow: 0 0 10px var(--neo-glow);
+  background: var(--neo-accent);
+  border-radius: 6px;
 }
 
 @media (max-width: 992px) {
   .weather-container {
     min-height: auto;
   }
-  
-  .input-group {
-    grid-template-columns: 1fr;
+}
+
+@media (max-width: 768px) {
+  .weather-data.grid-view {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.5rem;
   }
 }
 
 @media (max-width: 576px) {
   .page-shell {
-    padding: 0 var(--neo-spacing);
+    padding: 0 0.5rem;
   }
   
-  .temp-sort-btn {
-    width: 100%;
+  .weather-container {
+    padding: 0.6rem;
+    border-radius: 14px;
+    gap: 0.5rem;
+  }
+  
+  .action-bar {
+    padding: 0.4rem 0.6rem;
+    border-radius: 10px;
+    gap: 0.5rem;
+  }
+  
+  .result-count {
+    font-size: 0.7rem;
+  }
+  
+  .result-count i {
+    font-size: 0.75rem;
+  }
+  
+  .action-btn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+    border-radius: 6px;
+  }
+  
+  .action-btn i {
+    font-size: 0.75rem;
+  }
+  
+  .weather-data {
+    padding: 0.4rem;
+    border-radius: 10px;
+  }
+  
+  .weather-data.grid-view {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.4rem;
+  }
+}
+
+/* 超小螢幕 */
+@media (max-width: 380px) {
+  .weather-data.grid-view {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .action-btn span {
+    display: none;
+  }
+  
+  .action-btn {
+    padding: 0.4rem 0.5rem;
   }
 }
 
@@ -396,6 +419,6 @@ export default {
 .list-view-container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 </style>

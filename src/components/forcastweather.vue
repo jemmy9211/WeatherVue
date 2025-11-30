@@ -1,6 +1,6 @@
 <script>
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LCircleMarker } from "@vue-leaflet/vue-leaflet";
 import axios from 'axios'
 import NavBar from './NavBar.vue';
 const apiKey = 'CWA-FAC637E3-79B2-4800-B15D-9E19F7BB350B';
@@ -10,7 +10,7 @@ export default {
   components: {
     LMap,
     LTileLayer,
-    LMarker,
+    LCircleMarker,
     NavBar
   },
   props: ['nowdata'],
@@ -25,22 +25,41 @@ export default {
       MinT: [],
       PoPL: [],
       Wx: [],
-      totaldata: []
+      totaldata: [],
+      mapReady: false
     };
+  },
+  methods: {
+    onMapReady() {
+      this.mapReady = true;
+      // 延遲觸發地圖重新計算尺寸
+      this.$nextTick(() => {
+        setTimeout(() => {
+          if (this.$refs.map && this.$refs.map.leafletObject) {
+            this.$refs.map.leafletObject.invalidateSize();
+          }
+        }, 100);
+      });
+    }
+  },
+  mounted() {
+    // 頁面載入後也觸發一次
+    setTimeout(() => {
+      if (this.$refs.map && this.$refs.map.leafletObject) {
+        this.$refs.map.leafletObject.invalidateSize();
+      }
+    }, 500);
   },
   created(){
     this.lat=this.$route.query.lat;
     this.lon=this.$route.query.lon;
     this.sname=this.$route.query.sname;
     axios.get(url).then((res)=>{
-      //console.log(res.data)
       var tep=this.$route.query.userId;
       tep=2
-      //console.log(this.$route.query.userId)
       for(var i=0;i<res.data.records.location.length;i++){
         if(this.$route.query.userId==res.data.records.location[i].locationName){
           tep=i;
-          //console.log(i)
         }
       }
       this.wdata=res.data.records.location[tep]
@@ -59,324 +78,387 @@ export default {
 </script>
 
 <template>
-  <!-- Navigation bar -->
   <NavBar />
   
-  <!-- Main content -->
-  <div class="main-container">
-    <!-- Header -->
-    <div class="location-header">
-      <h3>{{ wdata.locationName }} 未來36小時預報</h3>
-    </div>
-    
-    <!-- Forecast content -->
-    <div class="forecast-container">
-      <div class="forecast-row">    
-        <forcastcom v-for="x in totaldata" v-bind:forcastdata="x"></forcastcom>
-      </div>
-      
-      <!-- Map section -->
-      <div class="map-container">
-        <h3 class="map-title">{{sname}} 觀測站位置圖</h3>
-        <div class="map-wrapper" ref="myDiv">
-          <l-map ref="map" v-model:zoom="zoom" :center="[lat, lon]" :useGlobalLeaflet="false">
+  <main class="forecast-page">
+    <!-- 整合區塊：地點 + 預報 + 地圖(電腦版) -->
+    <article class="forecast-block">
+      <!-- 標題列 -->
+      <header class="block-header">
+        <div class="location-info">
+          <i class="bi bi-geo-alt-fill"></i>
+          <h1>{{ wdata.locationName }}</h1>
+          <span class="divider">|</span>
+          <span class="station-name">{{ sname }}</span>
+        </div>
+        <div class="forecast-badge">
+          <i class="bi bi-clock-history"></i>
+          <span>36hr</span>
+        </div>
+      </header>
+
+      <!-- 主內容：左側預報 + 右側地圖(電腦版) -->
+      <div class="block-content">
+        <!-- 預報卡片 -->
+        <div class="forecast-area">
+          <forcastcom v-for="(x, idx) in totaldata" :key="idx" :forcastdata="x" :index="idx" />
+        </div>
+        
+        <!-- 地圖 - 電腦版顯示在區塊內 -->
+        <div class="map-area map-desktop">
+          <l-map 
+            ref="map" 
+            v-model:zoom="zoom" 
+            :center="[lat, lon]" 
+            :useGlobalLeaflet="false"
+            @ready="onMapReady"
+          >
             <l-tile-layer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               layer-type="base"
               name="OpenStreetMap"
             ></l-tile-layer>
-            <l-marker :lat-lng="[lat, lon]"></l-marker>
+            <l-circle-marker 
+              :lat-lng="[lat, lon]"
+              :radius="10"
+              fillColor="#00f2ff"
+              color="#fff"
+              :weight="2"
+              :opacity="1"
+              :fillOpacity="0.8"
+            />
           </l-map>
         </div>
       </div>
-    </div>
-  </div>
+    </article>
+    
+    <!-- 地圖獨立區塊 - 手機版顯示 -->
+    <section class="map-section-mobile">
+      <div class="map-header">
+        <i class="bi bi-pin-map-fill"></i>
+        <span>觀測站位置</span>
+      </div>
+      <div class="map-container">
+        <l-map 
+          ref="mapMobile" 
+          v-model:zoom="zoom" 
+          :center="[lat, lon]" 
+          :useGlobalLeaflet="false"
+        >
+          <l-tile-layer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            layer-type="base"
+            name="OpenStreetMap"
+          ></l-tile-layer>
+          <l-circle-marker 
+            :lat-lng="[lat, lon]"
+            :radius="10"
+            fillColor="#00f2ff"
+            color="#fff"
+            :weight="2"
+            :opacity="1"
+            :fillOpacity="0.8"
+          />
+        </l-map>
+      </div>
+    </section>
+  </main>
 </template>
 
-<style>
-.main-container {
-  width: min(1200px, calc(100% - 2rem));
-  margin: 0 auto 2rem auto;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+<style scoped>
+.forecast-page {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 0 0.5rem 2rem;
 }
 
-.location-header {
-  background: var(--neo-panel);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+/* 整合區塊 */
+.forecast-block {
+  background: rgba(30, 41, 59, 0.7);
   border: 1px solid var(--neo-border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* 標題列 */
+.block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid var(--neo-border);
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.location-info > i {
+  font-size: 1.1rem;
+  color: var(--neo-accent);
+}
+
+.location-info h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: var(--neo-text);
-  padding: 1.5rem;
-  border-radius: 20px;
-  margin-bottom: 2rem;
-  text-align: center;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    0 2px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.location-header:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 0 20px var(--neo-glow);
-}
-
-.location-header h3 {
-  background: linear-gradient(135deg, 
-    var(--neo-accent) 0%,
-    var(--neo-accent-secondary) 100%
-  );
+  background: linear-gradient(135deg, #fff 0%, var(--neo-accent) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-weight: 700;
-  margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.forecast-container {
+.divider {
+  color: var(--neo-border);
+  font-weight: 300;
+}
+
+.station-name {
+  font-size: 0.8rem;
+  color: var(--neo-muted);
+}
+
+.forecast-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  background: rgba(var(--neo-accent-rgb, 0, 242, 255), 0.15);
+  border: 1px solid rgba(var(--neo-accent-rgb, 0, 242, 255), 0.3);
+  border-radius: 12px;
+  color: var(--neo-accent);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.forecast-badge i {
+  font-size: 0.75rem;
+}
+
+/* 主內容區 - 左右排列 */
+.block-content {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 0;
+}
+
+/* 預報區 */
+.forecast-area {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 80vh;
-  overflow: auto;
-  padding: 1.5rem;
-  border-radius: 20px;
-  background: var(--neo-surface);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--neo-border);
-  box-shadow: 
-    0 4px 24px rgba(0, 0, 0, 0.2),
-    0 1px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  gap: 0.6rem;
+  padding: 1rem;
+  border-right: 1px solid var(--neo-border);
 }
 
-.forecast-row {
+/* 地圖區 - 電腦版 */
+.map-area {
+  height: 100%;
+  min-height: 280px;
+  position: relative;
+}
+
+.map-area :deep(.leaflet-container) {
+  height: 100%;
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
-.map-container {
-  width: 100%;
-  margin-top: 2rem;
-}
-
-.map-title {
-  background: var(--neo-panel);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid var(--neo-border);
-  border-bottom: none;
-  color: var(--neo-text);
-  padding: 1.5rem;
-  border-radius: 20px 20px 0 0;
-  margin-bottom: 0;
-  font-weight: 700;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.2),
-    0 1px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-.map-wrapper {
-  height: 400px;
-  width: 100%;
-  border-radius: 0 0 20px 20px;
-  overflow: hidden;
-  border: 1px solid var(--neo-border);
-  border-top: none;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Dark mode map filter */
-.map-wrapper .leaflet-layer,
-.map-wrapper .leaflet-control-zoom-in,
-.map-wrapper .leaflet-control-zoom-out,
-.map-wrapper .leaflet-control-attribution {
+/* Dark mode map filter - 與 wmap.vue 一樣的方式 */
+.map-area :deep(.leaflet-layer),
+.map-area :deep(.leaflet-control-zoom-in),
+.map-area :deep(.leaflet-control-zoom-out),
+.map-area :deep(.leaflet-control-attribution),
+.map-container :deep(.leaflet-layer),
+.map-container :deep(.leaflet-control-zoom-in),
+.map-container :deep(.leaflet-control-zoom-out),
+.map-container :deep(.leaflet-control-attribution) {
   filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
 }
 
-/* Custom scrollbar for forecast container */
-.forecast-container::-webkit-scrollbar {
-  width: 8px;
+/* 手機版獨立地圖區塊 - 預設隱藏 */
+.map-section-mobile {
+  display: none;
 }
 
-.forecast-container::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-}
-
-.forecast-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, 
-    var(--neo-accent) 0%, 
-    var(--neo-accent-secondary) 100%
-  );
-  border-radius: 10px;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-.forecast-container::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, 
-    var(--neo-accent) 0%, 
-    var(--neo-accent-secondary) 100%
-  );
-  background-clip: content-box;
-  box-shadow: 0 0 10px var(--neo-glow);
-}
-
-/* Responsive design optimization */
-@media (max-width: 1200px) {
-  .main-container {
-    max-width: 95%;
-    padding: 0.75rem;
-  }
-  
-  .forecast-row {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
-  }
-}
-
+/* 響應式 - 平板 */
 @media (max-width: 992px) {
-  /* Tablet styles */
-  .main-container {
-    margin: 1.5rem auto;
-    padding: 0.5rem;
+  .block-content {
+    grid-template-columns: 1fr 250px;
   }
   
-  .location-header {
-    padding: 1.25rem;
-    margin-bottom: 1.5rem;
-    border-radius: 18px;
-  }
-  
-  .location-header h3 {
-    font-size: 1.5rem;
-  }
-  
-  .forecast-container {
-    padding: 1.25rem;
-    border-radius: 18px;
-  }
-  
-  .forecast-row {
-    width: 95%;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .map-container {
-    width: 95%;
-    margin-top: 1.5rem;
-  }
-  
-  .map-title {
-    padding: 1.25rem;
-    font-size: 1.1rem;
-    border-radius: 18px 18px 0 0;
-  }
-  
-  .map-wrapper {
-    height: 350px;
-    border-radius: 0 0 18px 18px;
+  .forecast-area {
+    padding: 0.85rem;
+    gap: 0.5rem;
   }
 }
 
+/* 響應式 - 手機：改為上下排列 */
 @media (max-width: 768px) {
-  /* Mobile layout-only adjustments */
-  .main-container {
-    margin: 1rem 0.5rem;
-    padding: 0.5rem;
+  .forecast-page {
+    padding: 0 0.35rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
   }
   
-  .location-header {
-    padding: 1rem;
-    margin-bottom: 1rem;
+  .forecast-block {
+    border-radius: 14px;
   }
   
-  .forecast-container {
-    padding: 1rem;
-    min-height: 60vh;
+  .block-header {
+    padding: 0.6rem 0.85rem;
   }
   
-  .forecast-row {
-    width: 100%;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    margin-bottom: 1rem;
+  .location-info > i {
+    font-size: 0.95rem;
+  }
+  
+  .location-info h1 {
+    font-size: 0.95rem;
+  }
+  
+  .station-name {
+    font-size: 0.7rem;
+  }
+  
+  .block-content {
+    display: block;
+  }
+  
+  .forecast-area {
+    border-right: none;
+    border-bottom: none;
+    padding: 0.6rem;
+    gap: 0.4rem;
+  }
+  
+  /* 隱藏電腦版地圖 */
+  .map-desktop {
+    display: none;
+  }
+  
+  /* 顯示手機版獨立地圖區塊 */
+  .map-section-mobile {
+    display: block;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid var(--neo-border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  
+  .map-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    background: rgba(0, 0, 0, 0.25);
+    border-bottom: 1px solid var(--neo-border);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--neo-text);
+  }
+  
+  .map-header i {
+    color: var(--neo-accent);
+    font-size: 0.85rem;
   }
   
   .map-container {
+    height: 200px;
+    position: relative;
+  }
+  
+  .map-container :deep(.leaflet-container) {
+    height: 100%;
     width: 100%;
-    margin-top: 1rem;
-  }
-  
-  .map-title {
-    padding: 1rem;
-  }
-  
-  .map-wrapper {
-    height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 }
 
+/* 響應式 - 小螢幕手機 */
 @media (max-width: 576px) {
-  /* Small mobile styles */
-  .main-container {
-    margin: 0.75rem 0.25rem;
-    padding: 0.25rem;
+  .forecast-page {
+    padding: 0 0.25rem 1rem;
+    gap: 0.5rem;
   }
   
-  .location-header {
-    padding: 0.875rem;
-    border-radius: 14px;
+  .forecast-block {
+    border-radius: 12px;
   }
   
-  .location-header h3 {
-    font-size: 1.1rem;
+  .block-header {
+    padding: 0.5rem 0.7rem;
   }
   
-  .forecast-container {
-    padding: 0.75rem;
-    border-radius: 14px;
+  .location-info {
+    gap: 0.35rem;
+    flex: 1;
+    min-width: 0;
   }
   
-  .forecast-row {
-    gap: 0.875rem;
+  .location-info > i {
+    font-size: 0.85rem;
+    flex-shrink: 0;
   }
   
-  .map-title {
-    padding: 0.875rem;
-    font-size: 0.95rem;
-    border-radius: 14px 14px 0 0;
+  .location-info h1 {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
-  .map-wrapper {
-    height: 250px;
-    border-radius: 0 0 14px 14px;
+  .divider {
+    display: none;
   }
-}
-
-/* Touch-friendly improvements for mobile */
-@media (hover: none) and (pointer: coarse) {
-  /* Increase touch target sizes on touch devices */
-  .forecast-container {
-    -webkit-overflow-scrolling: touch;
+  
+  .station-name {
+    display: none;
+  }
+  
+  .forecast-badge {
+    padding: 0.2rem 0.45rem;
+    font-size: 0.6rem;
+    flex-shrink: 0;
+  }
+  
+  .forecast-badge i {
+    font-size: 0.65rem;
+  }
+  
+  .forecast-area {
+    padding: 0.5rem;
+    gap: 0.35rem;
+  }
+  
+  .map-section-mobile {
+    border-radius: 12px;
+  }
+  
+  .map-header {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.75rem;
+  }
+  
+  .map-header i {
+    font-size: 0.8rem;
+  }
+  
+  .map-container {
+    height: 180px;
   }
 }
 </style>

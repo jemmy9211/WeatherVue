@@ -1,30 +1,38 @@
 <template>
   <div :class="['weather-card-container', { 'in-popup': inPopup, 'list-view': view === 'list' }]">
-    <!-- Grid View -->
+    <!-- Grid View - 溫度主視覺卡片 -->
     <router-link v-if="view === 'grid'" class="weather-card" :to="{path:'/forcastweather',query:{userId: city.GeoInfo.CountyName,lat: city.GeoInfo.Coordinates[0].StationLatitude,lon:city.GeoInfo.Coordinates[0].StationLongitude,sname:city.StationName}}">
-      <div class="card-header">
-        <h3>{{ city.StationName }}</h3>
-        <span class="location-badge"><i class="bi bi-geo-alt-fill"></i> {{ city.GeoInfo.CountyName }}</span>
+      <!-- 頂部：站名 + 地區 -->
+      <div class="card-top">
+        <span class="station-name">{{ city.StationName }}</span>
+        <span class="county-tag">{{ city.GeoInfo.CountyName }}</span>
       </div>
       
-      <div class="card-body">
-        <div class="temperature-display">
-          <h2>{{ formatValue(city.WeatherElement.AirTemperature, '°C') }}</h2>
-          <div class="weather-icon-wrapper">
+      <!-- 中間：三欄式主視覺 -->
+      <div class="card-main">
+        <!-- 左側：天氣圖示 + 狀態 -->
+        <div class="weather-side">
+          <div class="icon-box">
             <WeatherVisual :weather="city.WeatherElement.Weather" />
           </div>
+          <span class="weather-label">{{ formatWeather(city.WeatherElement.Weather) }}</span>
         </div>
         
-        <h4 class="weather-condition">{{ formatWeather(city.WeatherElement.Weather) }}</h4>
+        <!-- 中間：溫度大數字 -->
+        <div class="temp-center">
+          <span class="temp-value">{{ formatTemp(city.WeatherElement.AirTemperature) }}</span>
+          <span class="temp-unit" v-if="city.WeatherElement.AirTemperature !== -99">°C</span>
+        </div>
         
-        <div class="card-details">
-          <div class="detail-item">
+        <!-- 右側：風速 + 時間 -->
+        <div class="info-side">
+          <div class="info-item">
             <i class="bi bi-wind"></i>
-            <span>風速: {{ formatValue(city.WeatherElement.WindSpeed, 'm/s') }}</span>
+            <span>{{ formatValue(city.WeatherElement.WindSpeed, 'm/s') }}</span>
           </div>
-          <div class="detail-item">
+          <div class="info-item">
             <i class="bi bi-clock"></i>
-            <span>{{ formatDateTime(city.ObsTime.DateTime) }}</span>
+            <span>{{ formatTime(city.ObsTime.DateTime) }}</span>
           </div>
         </div>
       </div>
@@ -33,8 +41,8 @@
     <!-- List View -->
     <router-link v-else class="weather-list-item" :to="{path:'/forcastweather',query:{userId: city.GeoInfo.CountyName,lat: city.GeoInfo.Coordinates[0].StationLatitude,lon:city.GeoInfo.Coordinates[0].StationLongitude,sname:city.StationName}}">
         <div class="list-item-group location-group">
-          <span class="station-name">{{ city.StationName }}</span>
-          <span class="county-name">{{ city.GeoInfo.CountyName }}</span>
+          <span class="list-station-name">{{ city.StationName }}</span>
+          <span class="list-county-name">{{ city.GeoInfo.CountyName }}</span>
         </div>
         <div class="list-item-group weather-group">
           <div class="list-icon-wrapper">
@@ -86,8 +94,15 @@ export default {
       if (!dateTime) return '';
       return dateTime.slice(0,16).replace('T', ' ');
     },
+    formatTime(dateTime) {
+      if (!dateTime) return '';
+      return dateTime.slice(11,16);
+    },
     formatValue(value, unit) {
       return value === -99 ? '量測中' : `${value} ${unit}`;
+    },
+    formatTemp(value) {
+      return value === -99 ? '--' : value;
     },
     formatWeather(weather) {
       return weather === -99 ? '量測中' : weather;
@@ -110,21 +125,24 @@ export default {
   padding: 0;
 }
 
+/* ===== 新版 Grid View - 溫度主視覺卡片 ===== */
 .weather-card {
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  border-radius: var(--neo-card-radius);
-  background: var(--neo-panel);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  background: linear-gradient(
+    160deg,
+    rgba(30, 41, 59, 0.85) 0%,
+    rgba(15, 23, 42, 0.95) 100%
+  );
   border: 1px solid var(--neo-border);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  padding: clamp(1rem, 1.8vw, 1.4rem);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  padding: 0.85rem;
   gap: 0.5rem;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   position: relative;
-  overflow: hidden;
+  min-width: 0;
 }
 
 .weather-card::before {
@@ -133,189 +151,435 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neo-accent), transparent);
+  opacity: 0.4;
 }
 
 .weather-card:hover {
-  transform: translateY(-6px) scale(1.02);
+  transform: translateY(-4px);
   border-color: var(--neo-accent);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 30px var(--neo-glow);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 24px var(--neo-glow);
 }
 
-.card-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding-bottom: 0.6rem;
-  border-bottom: 1px solid var(--neo-border);
+.weather-card:hover::before {
+  opacity: 1;
 }
 
-.card-header h3 {
-  color: var(--neo-text);
-  font-size: 1.2rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.location-badge {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--neo-muted);
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  border: 1px solid var(--neo-border);
-  transition: all 0.3s ease;
-}
-
-.weather-card:hover .location-badge {
-  background: var(--neo-accent);
-  color: var(--neo-bg);
-  border-color: var(--neo-accent);
-  box-shadow: 0 0 10px var(--neo-glow);
-}
-
-.card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.temperature-display {
+/* 頂部區塊 */
+.card-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-}
-
-.temperature-display h2 {
-  color: var(--neo-text);
-  font-size: clamp(2rem, 3vw, 2.4rem);
-  font-weight: 700;
-  text-shadow: 0 0 20px var(--neo-glow);
-}
-
-.weather-icon-wrapper {
-  transform: scale(1.2);
-}
-
-.weather-condition {
-  color: var(--neo-muted);
-  font-size: 0.95rem;
-  letter-spacing: 0.05em;
-}
-
-.card-details {
-  display: flex;
-  flex-direction: column;
   gap: 0.5rem;
-  border-top: 1px solid var(--neo-border);
-  padding-top: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.detail-item {
+.station-name {
+  color: var(--neo-text);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.county-tag {
+  background: rgba(var(--neo-accent-rgb, 0, 242, 255), 0.1);
+  color: var(--neo-accent);
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  border: 1px solid rgba(var(--neo-accent-rgb, 0, 242, 255), 0.25);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.weather-card:hover .county-tag {
+  background: var(--neo-accent);
+  color: #0f172a;
+  border-color: var(--neo-accent);
+}
+
+/* 三欄主視覺區 */
+.card-main {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+}
+
+/* 左側：天氣圖示 */
+.weather-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  flex-shrink: 0;
+}
+
+.icon-box {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+
+.weather-card:hover .icon-box {
+  transform: scale(1.1);
+}
+
+.weather-label {
+  font-size: 0.6rem;
   color: var(--neo-muted);
-  font-size: 0.9rem;
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 55px;
 }
 
-.detail-item i {
+/* 中間：溫度大數字 */
+.temp-center {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  padding: 0 0.25rem;
+}
+
+.temp-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(180deg, #ffffff 20%, var(--neo-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: transform 0.25s ease;
+}
+
+.weather-card:hover .temp-value {
+  transform: scale(1.05);
+}
+
+.temp-unit {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--neo-muted);
+  margin-top: 0.1rem;
+  margin-left: 0.05rem;
+}
+
+/* 右側：資訊 */
+.info-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.4rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.info-item i {
+  font-size: 0.65rem;
   color: var(--neo-accent);
+  flex-shrink: 0;
 }
 
+.info-item span {
+  font-size: 0.6rem;
+  color: var(--neo-muted);
+  white-space: nowrap;
+}
+
+/* ===== List View 樣式 ===== */
 .weather-list-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.9rem 1.25rem;
-  background: var(--neo-panel);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 0.65rem 1rem;
+  background: rgba(30, 41, 59, 0.6);
   border: 1px solid var(--neo-border);
-  border-radius: var(--neo-card-radius);
+  border-radius: 12px;
   text-decoration: none;
-  gap: 1rem;
+  gap: 0.75rem;
   color: var(--neo-text);
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.weather-list-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--neo-accent);
+  border-radius: 3px 0 0 3px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 .weather-list-item:hover {
-  transform: translateY(-2px) scale(1.01);
+  transform: translateY(-2px);
   border-color: var(--neo-accent);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 15px var(--neo-glow);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 12px var(--neo-glow);
+}
+
+.weather-list-item:hover::before {
+  opacity: 1;
 }
 
 .list-item-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .list-icon-wrapper {
-  transform: scale(0.6);
+  transform: scale(0.55);
   margin: -10px;
 }
 
 .location-group {
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.15rem;
+  gap: 0;
+  min-width: 90px;
 }
 
-.station-name {
+.list-station-name {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: var(--neo-text);
 }
 
-.county-name {
-  font-size: 0.85rem;
+.list-county-name {
+  font-size: 0.7rem;
   color: var(--neo-muted);
 }
 
 .weather-group {
   color: var(--neo-text);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.weather-text {
+  font-size: 0.75rem;
+  color: var(--neo-muted);
 }
 
 .data-group .temperature {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--neo-text);
-  text-shadow: 0 0 10px var(--neo-glow);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--neo-accent);
+}
+
+.wind-group,
+.time-group {
+  padding: 0.2rem 0.4rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
 }
 
 .wind-group span,
 .time-group span {
   color: var(--neo-muted);
+  font-size: 0.7rem;
 }
 
 .wind-group i,
 .time-group i {
   color: var(--neo-accent);
+  font-size: 0.75rem;
 }
 
+/* ===== 響應式設計 ===== */
 @media (max-width: 992px) {
   .weather-list-item {
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
   }
   
-  .location-group,
-  .data-group {
-    flex-basis: calc(50% - 0.5rem);
+  .location-group {
+    flex-basis: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .wind-group,
+  .time-group {
+    display: none;
   }
 }
 
+/* 手機版 Grid View */
 @media (max-width: 576px) {
+  .weather-card {
+    padding: 0.65rem;
+    gap: 0.35rem;
+    border-radius: 12px;
+  }
+  
+  .card-top {
+    padding-bottom: 0.35rem;
+  }
+  
+  .station-name {
+    font-size: 0.8rem;
+  }
+  
+  .county-tag {
+    padding: 0.1rem 0.35rem;
+    font-size: 0.55rem;
+  }
+  
+  .card-main {
+    gap: 0.25rem;
+    padding: 0.2rem 0;
+  }
+  
+  .icon-box {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .weather-label {
+    font-size: 0.5rem;
+    max-width: 45px;
+  }
+  
+  .temp-value {
+    font-size: 1.5rem;
+  }
+  
+  .temp-unit {
+    font-size: 0.65rem;
+  }
+  
+  .info-side {
+    gap: 0.2rem;
+  }
+  
+  .info-item {
+    padding: 0.1rem 0.3rem;
+  }
+  
+  .info-item i {
+    font-size: 0.55rem;
+  }
+  
+  .info-item span {
+    font-size: 0.5rem;
+  }
+  
+  /* 手機版 List View */
   .weather-list-item {
-    flex-direction: column;
-    align-items: stretch;
+    padding: 0.5rem 0.7rem;
+    gap: 0.4rem;
+    border-radius: 10px;
+  }
+  
+  .weather-list-item::before {
+    display: none;
+  }
+  
+  .location-group {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+  }
+  
+  .list-station-name {
+    font-size: 0.9rem;
+  }
+  
+  .list-county-name {
+    font-size: 0.7rem;
+  }
+  
+  .weather-group {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .list-icon-wrapper {
+    transform: scale(0.5);
+    margin: -12px;
+  }
+  
+  .weather-text {
+    display: none;
+  }
+  
+  .data-group .temperature {
+    font-size: 1.1rem;
+  }
+}
+
+/* 超小螢幕 */
+@media (max-width: 380px) {
+  .weather-card {
+    padding: 0.5rem;
+  }
+  
+  .station-name {
+    font-size: 0.75rem;
+  }
+  
+  .county-tag {
+    padding: 0.08rem 0.3rem;
+    font-size: 0.5rem;
+  }
+  
+  .temp-value {
+    font-size: 1.3rem;
+  }
+  
+  .icon-box {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .weather-label {
+    font-size: 0.45rem;
+    max-width: 40px;
+  }
+  
+  .info-item {
+    padding: 0.08rem 0.2rem;
+  }
+  
+  .info-item i {
+    font-size: 0.5rem;
+  }
+  
+  .info-item span {
+    font-size: 0.45rem;
   }
 }
 </style>

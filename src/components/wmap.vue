@@ -29,7 +29,9 @@ export default {
       currentlocationy: '',
       iconSize: 32,
       winheight: 0,
-      markerColors: ['blue', 'red', 'green', 'orange', 'yellow', 'purple']
+      markerColors: ['blue', 'red', 'green', 'orange', 'yellow', 'purple'],
+      selectedCounty: '',
+      search: ''
     }
   },
   created(){
@@ -44,9 +46,35 @@ export default {
       this.showdiv = false
     })
   },
+  computed: {
+    filteredData() {
+      if (!this.data) return [];
+      
+      let result = this.data;
+      
+      // 縣市篩選
+      if (this.selectedCounty) {
+        result = result.filter(item => item.GeoInfo.CountyName === this.selectedCounty);
+      }
+      
+      // 關鍵字搜尋
+      if (this.search) {
+        const searchkey = this.search.replace('台', '臺');
+        var aset = result.filter(item => item.GeoInfo.CountyName.includes(searchkey));
+        var bset = result.filter(item => item.StationName.includes(searchkey));
+        result = aset.concat(bset.filter((e) => { return aset.indexOf(e) === -1; }));
+      }
+      
+      return result;
+    }
+  },
   methods: {
     getMarkerColor(station, index) {
       return this.markerColors[index % this.markerColors.length];
+    },
+    clearFilters() {
+      this.selectedCounty = '';
+      this.search = '';
     }
   }
 };
@@ -54,17 +82,27 @@ export default {
 <template>
   <div class="weather-map-container">
     <div class="map-header">
-      <NavBar />
+      <NavBar 
+        :showFilter="true"
+        v-model:selectedCounty="selectedCounty"
+        v-model:search="search"
+        @clear="clearFilters"
+      />
     </div>
     
-    <div class="map-alert">
-      <div class="alert alert-success">
-        <strong>全台觀測站位置圖!</strong> 點按marker取得觀測站資料!
+    <div class="map-info-bar">
+      <div class="info-left">
+        <i class="bi bi-pin-map-fill"></i>
+        <span>顯示 {{ filteredData.length }} 個觀測站</span>
+      </div>
+      <div class="info-right">
+        <i class="bi bi-hand-index-thumb"></i>
+        <span>點按標記查看詳情</span>
       </div>
     </div>
     
     <div class="map-content">
-      <div v-if="showdiv" id="map" ref="myDiv" :style="{ height: winheight - 230 + 'px' }">
+      <div v-if="showdiv" id="map" ref="myDiv" :style="{ height: winheight - 180 + 'px' }">
         <l-map ref="map" v-model:zoom="zoom" :center="[23.45889,120.9417]" :useGlobalLeaflet="false">
           <l-tile-layer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -73,7 +111,7 @@ export default {
           ></l-tile-layer>
           
           <l-marker 
-            v-for="(x, index) in data" 
+            v-for="(x, index) in filteredData" 
             :key="index"
             :lat-lng="[x.GeoInfo.Coordinates[0].StationLatitude, x.GeoInfo.Coordinates[0].StationLongitude]"
           >
@@ -117,25 +155,38 @@ export default {
   width: 100%;
 }
 
-.map-alert {
-  padding: 0 15px;
-  margin-bottom: 10px;
+/* 資訊列 */
+.map-info-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem 0.5rem;
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid var(--neo-border);
+  border-radius: 10px;
+  font-size: 0.8rem;
 }
 
-.map-alert .alert {
-  background: rgba(220, 53, 69, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-  border-radius: 14px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.5);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  font-weight: 700;
+.info-left, .info-right {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--neo-muted);
+}
+
+.info-left i {
+  color: var(--neo-accent);
+}
+
+.info-right i {
+  color: #fbbf24;
 }
 
 .map-content {
   flex-grow: 1;
   position: relative;
+  padding: 0 0.5rem 0.5rem;
 }
 
 #map {
@@ -278,19 +329,11 @@ export default {
     height: 100vh;
   }
   
-  .map-alert {
-    padding: 0 8px;
-    margin-bottom: 8px;
-  }
-  
-  .map-alert .alert {
-    padding: 0.75rem;
-    font-size: 0.9rem;
-    border-radius: 12px;
-  }
-  
-  .map-alert strong {
-    font-size: 0.95rem;
+  .map-info-bar {
+    padding: 0.4rem 0.75rem;
+    margin: 0 0.4rem 0.4rem;
+    font-size: 0.75rem;
+    border-radius: 8px;
   }
   
   #map {
@@ -327,21 +370,19 @@ export default {
 
 @media (max-width: 576px) {
   /* Small mobile styles */
-  .map-alert {
-    padding: 0 6px;
-    margin-bottom: 6px;
+  .map-info-bar {
+    padding: 0.35rem 0.6rem;
+    margin: 0 0.35rem 0.35rem;
+    font-size: 0.7rem;
+    gap: 0.5rem;
   }
   
-  .map-alert .alert {
-    padding: 0.625rem;
-    font-size: 0.85rem;
-    border-radius: 10px;
+  .info-right {
+    display: none;
   }
   
-  .map-alert strong {
-    font-size: 0.875rem;
-    display: block;
-    margin-bottom: 0.25rem;
+  .map-content {
+    padding: 0 0.35rem 0.35rem;
   }
   
   .leaflet-popup-content {
@@ -374,9 +415,8 @@ export default {
 
 @media (max-width: 420px) {
   /* Extra small mobile styles */
-  .map-alert .alert {
-    padding: 0.5rem;
-    font-size: 0.8rem;
+  .map-info-bar {
+    font-size: 0.65rem;
   }
   
   .leaflet-popup-content {
