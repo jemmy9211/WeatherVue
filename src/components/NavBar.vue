@@ -71,16 +71,16 @@ export default {
 
 <style>
 .main-navbar {
-  background: rgba(11, 17, 32, 0.95);
+  background: var(--neo-panel);
   border: 1px solid var(--neo-border);
   border-radius: 16px;
   padding: 0.5rem 0.75rem;
   position: sticky;
   top: 0.75rem;
   z-index: 1000;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--neo-shadow-lg);
   margin: 0 auto 1rem auto;
-  width: min(1200px, calc(100% - 1rem));
+  width: var(--neo-max-width);
 }
 
 .container-fluid {
@@ -101,10 +101,7 @@ export default {
 
 .navbar-brand h5 {
   margin: 0;
-  background: linear-gradient(135deg, var(--neo-accent), #fff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--neo-accent);
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: 0.02em;
@@ -117,7 +114,7 @@ export default {
   gap: 0.4rem;
   flex: 1;
   max-width: 400px;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--neo-surface);
   border: 1px solid var(--neo-border);
   border-radius: 10px;
   padding: 0.25rem 0.4rem;
@@ -139,7 +136,7 @@ export default {
 }
 
 .neo-select-sm option {
-  background: #1e293b;
+  background: var(--neo-panel);
   color: var(--neo-text);
 }
 
@@ -184,16 +181,16 @@ export default {
   width: 22px;
   height: 22px;
   border-radius: 6px;
-  background: rgba(239, 68, 68, 0.2);
+  background: #fef2f2;
   border: none;
-  color: #f87171;
+  color: #ef4444;
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
 }
 
 .clear-btn-sm:hover {
-  background: rgba(239, 68, 68, 0.4);
+  background: #fee2e2;
 }
 
 .clear-btn-sm i {
@@ -204,7 +201,7 @@ export default {
 .nav-links {
   display: flex;
   gap: 0.2rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--neo-surface);
   border: 1px solid var(--neo-border);
   border-radius: 10px;
   padding: 0.2rem;
@@ -232,7 +229,7 @@ export default {
 
 .nav-btn:hover {
   color: var(--neo-text);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--neo-panel);
 }
 
 .router-link-active.nav-btn {
@@ -281,7 +278,6 @@ export default {
     border-radius: 12px;
     top: 0.5rem;
     margin-bottom: 0.75rem;
-    width: calc(100% - 1rem);
   }
   
   .container-fluid {

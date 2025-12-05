@@ -9,20 +9,24 @@
 
 <style>
 :root {
-  --neo-bg: #0b1120;
-  --neo-panel: rgba(30, 41, 59, 0.6);
-  --neo-surface: rgba(15, 23, 42, 0.6);
-  --neo-border: rgba(255, 255, 255, 0.08);
-  --neo-border-strong: rgba(255, 255, 255, 0.15);
-  --neo-accent: #00f2ff;
-  --neo-accent-secondary: #bc13fe;
-  --neo-text: #e2e8f0;
-  --neo-muted: #94a3b8;
-  --neo-glow: rgba(0, 242, 255, 0.15);
+  /* Minimal Light Theme */
+  --neo-bg: #f8fafc;
+  --neo-panel: #ffffff;
+  --neo-surface: #f1f5f9;
+  --neo-border: #e2e8f0;
+  --neo-border-strong: #cbd5e1;
+  --neo-accent: #3b82f6;
+  --neo-accent-secondary: #6366f1;
+  --neo-text: #1e293b;
+  --neo-muted: #64748b;
+  --neo-glow: rgba(59, 130, 246, 0.1);
   --neo-card-radius: 12px;
   --neo-panel-radius: 16px;
   --neo-spacing: clamp(0.75rem, 1.5vw, 1.25rem);
   --neo-font-base: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --neo-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --neo-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --neo-max-width: min(1200px, calc(100% - 2rem));
 }
 
 html {
@@ -31,12 +35,6 @@ html {
 
 body {
   background-color: var(--neo-bg);
-  /* 簡化背景 - 移除網格圖案以提升效能 */
-  background-image:
-    radial-gradient(ellipse at 15% 50%, rgba(0, 242, 255, 0.06) 0%, transparent 40%),
-    radial-gradient(ellipse at 85% 30%, rgba(188, 19, 254, 0.06) 0%, transparent 40%);
-  background-size: 100% 100%;
-  background-attachment: fixed;
   color: var(--neo-text);
   font-family: var(--neo-font-base);
   font-size: 15px;
@@ -64,23 +62,28 @@ a:hover {
 
 ::selection {
   background: var(--neo-accent);
-  color: #04060f;
+  color: #ffffff;
 }
 
 /* 手機版優化 */
 @media (max-width: 768px) {
   body {
-    background-attachment: scroll;
     padding: 0.5rem;
     font-size: 14px;
+  }
+  
+  :root {
+    --neo-max-width: calc(100% - 1rem);
   }
 }
 
 @media (max-width: 576px) {
   body {
-    /* 手機上移除背景光暈以提升效能 */
-    background-image: none;
     padding: 0.4rem;
+  }
+  
+  :root {
+    --neo-max-width: calc(100% - 0.8rem);
   }
 }
 

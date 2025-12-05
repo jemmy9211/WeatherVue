@@ -167,17 +167,18 @@ export default {
 
 <style scoped>
 .forecast-page {
-  width: min(1200px, 100%);
+  width: var(--neo-max-width);
   margin: 0 auto;
   padding: 0 0.5rem 2rem;
 }
 
 /* 整合區塊 */
 .forecast-block {
-  background: rgba(30, 41, 59, 0.7);
+  background: var(--neo-panel);
   border: 1px solid var(--neo-border);
   border-radius: 18px;
   overflow: hidden;
+  box-shadow: var(--neo-shadow-lg);
 }
 
 /* 標題列 */
@@ -186,7 +187,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 0.85rem 1.25rem;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--neo-surface);
   border-bottom: 1px solid var(--neo-border);
 }
 
@@ -206,10 +207,6 @@ export default {
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--neo-text);
-  background: linear-gradient(135deg, #fff 0%, var(--neo-accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .divider {
@@ -227,8 +224,8 @@ export default {
   align-items: center;
   gap: 0.3rem;
   padding: 0.3rem 0.6rem;
-  background: rgba(var(--neo-accent-rgb, 0, 242, 255), 0.15);
-  border: 1px solid rgba(var(--neo-accent-rgb, 0, 242, 255), 0.3);
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
   border-radius: 12px;
   color: var(--neo-accent);
   font-size: 0.7rem;
@@ -272,7 +269,7 @@ export default {
   bottom: 0;
 }
 
-/* Dark mode map filter - 與 wmap.vue 一樣的方式 */
+/* Light mode - no filter needed */
 .map-area :deep(.leaflet-layer),
 .map-area :deep(.leaflet-control-zoom-in),
 .map-area :deep(.leaflet-control-zoom-out),
@@ -281,7 +278,7 @@ export default {
 .map-container :deep(.leaflet-control-zoom-in),
 .map-container :deep(.leaflet-control-zoom-out),
 .map-container :deep(.leaflet-control-attribution) {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  /* No filter for light mode */
 }
 
 /* 手機版獨立地圖區塊 - 預設隱藏 */
@@ -349,10 +346,11 @@ export default {
   /* 顯示手機版獨立地圖區塊 */
   .map-section-mobile {
     display: block;
-    background: rgba(30, 41, 59, 0.7);
+    background: var(--neo-panel);
     border: 1px solid var(--neo-border);
     border-radius: 14px;
     overflow: hidden;
+    box-shadow: var(--neo-shadow);
   }
   
   .map-header {
@@ -360,7 +358,7 @@ export default {
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 0.85rem;
-    background: rgba(0, 0, 0, 0.25);
+    background: var(--neo-surface);
     border-bottom: 1px solid var(--neo-border);
     font-size: 0.8rem;
     font-weight: 600;

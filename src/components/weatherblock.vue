@@ -125,19 +125,15 @@ export default {
   padding: 0;
 }
 
-/* ===== 新版 Grid View - 溫度主視覺卡片 ===== */
+/* ===== Grid View - 溫度主視覺卡片 ===== */
 .weather-card {
   display: flex;
   flex-direction: column;
   text-decoration: none;
   border-radius: 16px;
-  background: linear-gradient(
-    160deg,
-    rgba(30, 41, 59, 0.85) 0%,
-    rgba(15, 23, 42, 0.95) 100%
-  );
+  background: var(--neo-panel);
   border: 1px solid var(--neo-border);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--neo-shadow);
   padding: 0.85rem;
   gap: 0.5rem;
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
@@ -145,25 +141,10 @@ export default {
   min-width: 0;
 }
 
-.weather-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--neo-accent), transparent);
-  opacity: 0.4;
-}
-
 .weather-card:hover {
   transform: translateY(-4px);
   border-color: var(--neo-accent);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 24px var(--neo-glow);
-}
-
-.weather-card:hover::before {
-  opacity: 1;
+  box-shadow: var(--neo-shadow-lg);
 }
 
 /* 頂部區塊 */
@@ -173,7 +154,7 @@ export default {
   justify-content: space-between;
   gap: 0.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--neo-border);
 }
 
 .station-name {
@@ -187,20 +168,20 @@ export default {
 }
 
 .county-tag {
-  background: rgba(var(--neo-accent-rgb, 0, 242, 255), 0.1);
+  background: #eff6ff;
   color: var(--neo-accent);
   padding: 0.15rem 0.5rem;
   border-radius: 20px;
   font-size: 0.65rem;
   font-weight: 500;
-  border: 1px solid rgba(var(--neo-accent-rgb, 0, 242, 255), 0.25);
+  border: 1px solid #dbeafe;
   flex-shrink: 0;
   transition: all 0.2s ease;
 }
 
 .weather-card:hover .county-tag {
   background: var(--neo-accent);
-  color: #0f172a;
+  color: #ffffff;
   border-color: var(--neo-accent);
 }
 
@@ -260,15 +241,13 @@ export default {
   font-size: 2rem;
   font-weight: 700;
   line-height: 1;
-  background: linear-gradient(180deg, #ffffff 20%, var(--neo-accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--neo-text);
   transition: transform 0.25s ease;
 }
 
 .weather-card:hover .temp-value {
   transform: scale(1.05);
+  color: var(--neo-accent);
 }
 
 .temp-unit {
@@ -293,9 +272,9 @@ export default {
   align-items: center;
   gap: 0.25rem;
   padding: 0.15rem 0.4rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--neo-surface);
   border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--neo-border);
 }
 
 .info-item i {
@@ -316,7 +295,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   padding: 0.65rem 1rem;
-  background: rgba(30, 41, 59, 0.6);
+  background: var(--neo-panel);
   border: 1px solid var(--neo-border);
   border-radius: 12px;
   text-decoration: none;
@@ -342,7 +321,7 @@ export default {
 .weather-list-item:hover {
   transform: translateY(-2px);
   border-color: var(--neo-accent);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 0 12px var(--neo-glow);
+  box-shadow: var(--neo-shadow-lg);
 }
 
 .weather-list-item:hover::before {
@@ -399,7 +378,7 @@ export default {
 .wind-group,
 .time-group {
   padding: 0.2rem 0.4rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--neo-surface);
   border-radius: 6px;
 }
 

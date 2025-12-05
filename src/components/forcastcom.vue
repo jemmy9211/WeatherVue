@@ -78,15 +78,17 @@ export default {
 
 <style scoped>
 .forecast-card {
-  background: rgba(30, 41, 59, 0.8);
+  background: var(--neo-panel);
   border: 1px solid var(--neo-border);
   border-radius: 14px;
   overflow: hidden;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
+  box-shadow: var(--neo-shadow);
 }
 
 .forecast-card:hover {
-  border-color: rgba(var(--neo-accent-rgb, 0, 242, 255), 0.4);
+  border-color: var(--neo-accent);
+  box-shadow: var(--neo-shadow-lg);
 }
 
 /* 卡片標題 */
@@ -95,13 +97,13 @@ export default {
   align-items: center;
   gap: 0.5rem;
   padding: 0.6rem 0.85rem;
-  background: rgba(0, 0, 0, 0.25);
+  background: var(--neo-surface);
   border-bottom: 1px solid var(--neo-border);
 }
 
 .period-label {
-  background: linear-gradient(135deg, var(--neo-accent), var(--neo-accent-secondary, #00d4aa));
-  color: #000;
+  background: var(--neo-accent);
+  color: #fff;
   font-size: 0.65rem;
   font-weight: 700;
   padding: 0.2rem 0.5rem;
@@ -167,10 +169,7 @@ export default {
 .temp-high {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #ef4444;
 }
 
 .temp-sep {
@@ -209,15 +208,15 @@ export default {
 
 .rain-value i {
   font-size: 0.9rem;
-  color: #60a5fa;
+  color: #3b82f6;
 }
 
 .rain-value.high-rain {
-  color: #60a5fa;
+  color: #3b82f6;
 }
 
 .rain-value.high-rain i {
-  color: #3b82f6;
+  color: #2563eb;
 }
 
 .rain-label {

@@ -88,44 +88,27 @@ export default {
 }
 
 .header-section h1 {
-  background: linear-gradient(135deg, 
-    var(--neo-accent) 0%,
-    var(--neo-accent-secondary) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--neo-accent);
   font-weight: 700;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .header-section p {
   color: var(--neo-text);
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .info-card {
   background: var(--neo-panel);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid var(--neo-border);
   border-radius: 20px;
   padding: 2.5rem;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    0 2px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--neo-shadow-lg);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .info-card:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 0 20px var(--neo-glow);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .info-text {
@@ -133,17 +116,10 @@ export default {
   font-size: 1.1rem;
   line-height: 1.7;
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .feature-heading {
-  background: linear-gradient(135deg, 
-    var(--neo-accent) 0%,
-    var(--neo-accent-secondary) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--neo-accent);
   font-weight: 700;
   position: relative;
   padding-bottom: 0.5rem;
@@ -155,26 +131,17 @@ export default {
   align-items: flex-start;
   padding: 1.5rem;
   background: var(--neo-surface);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--neo-border);
   border-radius: 16px;
   height: 100%;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.2),
-    0 1px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--neo-shadow);
 }
 
 .feature-item:hover {
   transform: translateY(-4px) scale(1.02);
-  background: rgba(255, 255, 255, 0.05);
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.3),
-    0 2px 8px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 0 15px var(--neo-glow);
+  background: var(--neo-panel);
+  box-shadow: var(--neo-shadow-lg);
   border-color: var(--neo-accent);
 }
 
@@ -186,16 +153,9 @@ export default {
 
 .icon {
   font-size: 1.5rem;
-  background: linear-gradient(135deg, 
-    var(--neo-accent) 0%,
-    var(--neo-accent-secondary) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--neo-accent);
   margin-right: 1rem;
   flex-shrink: 0;
-  filter: drop-shadow(0 0 5px var(--neo-glow));
 }
 
 .divider {
@@ -217,16 +177,11 @@ export default {
 
 .glass-footer {
   background: var(--neo-panel);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
   border-top: 1px solid var(--neo-border);
   padding: 2rem 0;
   margin-top: auto;
-  color: var(--neo-text);
-  box-shadow: 
-    0 -4px 24px rgba(0, 0, 0, 0.2),
-    0 -1px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  color: var(--neo-muted);
+  box-shadow: var(--neo-shadow);
 }
 
 /* Responsive design optimization */

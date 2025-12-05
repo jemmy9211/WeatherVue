@@ -214,33 +214,22 @@ export default{
 
 .radar-card {
   background: var(--neo-panel);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid var(--neo-border);
   border-radius: 20px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    0 2px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--neo-shadow-lg);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .radar-card:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    0 0 20px var(--neo-glow);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   border-color: var(--neo-accent);
 }
 
 .card-header {
   padding: 1.5rem 2rem;
   background: var(--neo-surface);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid var(--neo-border);
   display: flex;
   align-items: center;
@@ -249,10 +238,7 @@ export default{
 }
 
 .radar-badge {
-  background: linear-gradient(135deg, 
-    var(--neo-accent) 0%, 
-    var(--neo-accent-secondary) 100%
-  );
+  background: var(--neo-accent);
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 25px;
@@ -260,18 +246,13 @@ export default{
   display: inline-block;
   word-break: keep-all;
   white-space: nowrap;
-  box-shadow: 
-    0 4px 16px rgba(0, 122, 255, 0.2),
-    0 1px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--neo-shadow);
 }
 
 .last-updated {
   font-size: 0.9rem;
   color: var(--neo-muted);
   font-weight: 500;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   margin-top: 5px;
 }
 
@@ -280,9 +261,7 @@ export default{
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: var(--neo-surface);
   min-height: 400px;
 }
 
@@ -300,23 +279,23 @@ export default{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(255, 255, 255, 0.95);
   padding: 1rem 2rem;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  color: white;
+  color: var(--neo-text);
   z-index: 10;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--neo-border);
+  box-shadow: var(--neo-shadow-lg);
 }
 
 .spinner-small {
   width: 24px;
   height: 24px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  border: 3px solid var(--neo-border);
   border-top-color: var(--neo-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -332,11 +311,11 @@ export default{
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: rgba(0, 0, 0, 0.3);
+  background: var(--neo-panel);
   padding: 0.75rem 1.25rem;
   border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--neo-border);
+  box-shadow: var(--neo-shadow);
 }
 
 .control-btn {
@@ -353,12 +332,12 @@ export default{
   transition: all 0.2s;
   font-size: 1.2rem;
   flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--neo-shadow);
 }
 
 .control-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 15px var(--neo-glow);
+  box-shadow: var(--neo-shadow-lg);
 }
 
 .timeline-container {
@@ -369,19 +348,18 @@ export default{
 }
 
 .time-label {
-  color: white;
+  color: var(--neo-text);
   font-family: monospace;
   font-size: 1rem;
   font-weight: 600;
   min-width: 50px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .timeline-slider {
   flex-grow: 1;
   height: 6px;
   -webkit-appearance: none;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--neo-border);
   border-radius: 3px;
   outline: none;
   cursor: pointer;
@@ -391,32 +369,26 @@ export default{
   -webkit-appearance: none;
   width: 16px;
   height: 16px;
-  background: white;
+  background: var(--neo-accent);
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--neo-shadow);
   transition: transform 0.1s;
 }
 
 .timeline-slider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
-  background: var(--neo-accent);
 }
 
 .card-footer {
   padding: 1.5rem;
   text-align: center;
   background: var(--neo-surface);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-top: 1px solid var(--neo-border);
 }
 
 .refresh-button {
-  background: linear-gradient(135deg, 
-    var(--neo-accent) 0%, 
-    var(--neo-accent-secondary) 100%
-  );
+  background: var(--neo-accent);
   color: white;
   border: none;
   border-radius: 25px;
@@ -424,24 +396,13 @@ export default{
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 
-    0 4px 16px rgba(0, 122, 255, 0.2),
-    0 1px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--neo-shadow);
 }
 
 .refresh-button:hover {
   transform: translateY(-2px) scale(1.05);
-  background: linear-gradient(135deg, 
-    var(--neo-accent) 0%, 
-    var(--neo-accent-secondary) 100%
-  );
-  box-shadow: 
-    0 6px 20px rgba(0, 122, 255, 0.3),
-    0 2px 8px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 0 15px var(--neo-glow);
+  background: var(--neo-accent-secondary);
+  box-shadow: var(--neo-shadow-lg);
 }
 
 .loading-container {
@@ -459,24 +420,18 @@ export default{
   width: 60px;
   height: 60px;
   margin: 0 auto 2rem;
-  border: 5px solid rgba(255, 255, 255, 0.1);
+  border: 5px solid var(--neo-border);
   border-radius: 50%;
   border-top-color: var(--neo-accent);
   animation: spin 1s ease-in-out infinite;
-  box-shadow: 0 0 15px var(--neo-glow);
 }
 
 .loading-message {
   background: var(--neo-panel);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
   border: 1px solid var(--neo-border);
   padding: 2.5rem;
   border-radius: 20px;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.2),
-    0 2px 8px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: var(--neo-shadow-lg);
   color: var(--neo-text);
 }
 
@@ -484,12 +439,10 @@ export default{
   margin-bottom: 1rem;
   font-weight: 600;
   color: var(--neo-text);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .loading-message p {
   color: var(--neo-muted);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .fade-enter-active, .fade-leave-active {

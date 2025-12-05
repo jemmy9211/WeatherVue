@@ -179,7 +179,7 @@ export default {
 
 <style>
 .page-shell {
-  width: min(1200px, 100%);
+  width: var(--neo-max-width);
   margin: 0 auto;
   padding-bottom: var(--neo-spacing);
   display: flex;
@@ -187,13 +187,13 @@ export default {
   gap: var(--neo-spacing);
 }
 
-/* Sci-Fi Minimalist Design System */
+/* Minimal Light Design System */
 .weather-container {
-  background: rgba(30, 41, 59, 0.7);
+  background: var(--neo-panel);
   border: 1px solid var(--neo-border);
   border-radius: var(--neo-panel-radius);
   padding: clamp(0.75rem, 2vw, 1.5rem);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--neo-shadow-lg);
   color: var(--neo-text);
   min-height: calc(100vh - 150px);
   display: flex;
@@ -212,7 +212,7 @@ export default {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--neo-surface);
   border: 1px solid var(--neo-border);
   border-radius: 12px;
 }
@@ -241,7 +241,7 @@ export default {
   justify-content: center;
   padding: 0.45rem 0.75rem;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--neo-panel);
   border: 1px solid var(--neo-border);
   transition: all 0.2s ease;
   color: var(--neo-text);
@@ -261,17 +261,18 @@ export default {
 .action-btn:hover {
   border-color: var(--neo-accent);
   color: var(--neo-accent);
-  box-shadow: 0 0 10px var(--neo-glow);
+  box-shadow: var(--neo-shadow);
 }
 
 .action-btn.active {
-  background: linear-gradient(135deg, var(--neo-accent), var(--neo-accent-secondary));
-  border-color: transparent;
+  background: var(--neo-accent);
+  border-color: var(--neo-accent);
   color: #fff;
 }
 
 .action-btn.active-low {
-  background: linear-gradient(135deg, #e83e8c, var(--neo-accent));
+  background: var(--neo-accent-secondary);
+  border-color: var(--neo-accent-secondary);
 }
 
 .action-btn i {
@@ -289,7 +290,7 @@ export default {
 }
 
 .weather-data {
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--neo-surface);
   border: 1px solid var(--neo-border);
   border-radius: 12px;
   padding: clamp(0.5rem, 1.2vw, 1rem);
@@ -302,23 +303,24 @@ export default {
 }
 
 .loading-container {
-  background: rgba(15, 23, 42, 0.6);
+  background: var(--neo-surface);
   border: 1px solid var(--neo-border);
   border-radius: 16px;
   padding: clamp(1.5rem, 4vw, 2.5rem);
   letter-spacing: 0.1em;
+  text-align: center;
 }
 
 .spinner-border {
-  color: var(--neo-accent);
+  color: var(--neo-accent) !important;
 }
 
 .alert {
   margin: 0;
   border-radius: 12px;
-  background: rgba(220, 53, 69, 0.1);
-  border: 1px solid rgba(220, 53, 69, 0.2);
-  color: #ff6b6b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
   padding: 0.75rem 1rem;
   font-size: 0.85rem;
 }
@@ -329,12 +331,16 @@ export default {
 }
 
 .weather-scroll::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--neo-surface);
 }
 
 .weather-scroll::-webkit-scrollbar-thumb {
-  background: var(--neo-accent);
+  background: var(--neo-border-strong);
   border-radius: 6px;
+}
+
+.weather-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--neo-accent);
 }
 
 @media (max-width: 992px) {
@@ -352,7 +358,7 @@ export default {
 
 @media (max-width: 576px) {
   .page-shell {
-    padding: 0 0.5rem;
+    padding: 0;
   }
   
   .weather-container {
@@ -390,18 +396,15 @@ export default {
     border-radius: 10px;
   }
   
+  /* 手機版改為單欄布局，避免第二個 block 被截斷 */
   .weather-data.grid-view {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: 1fr;
     gap: 0.4rem;
   }
 }
 
 /* 超小螢幕 */
 @media (max-width: 380px) {
-  .weather-data.grid-view {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
   .action-btn span {
     display: none;
   }

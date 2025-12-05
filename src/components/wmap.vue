@@ -31,7 +31,8 @@ export default {
       winheight: 0,
       markerColors: ['blue', 'red', 'green', 'orange', 'yellow', 'purple'],
       selectedCounty: '',
-      search: ''
+      search: '',
+      isDarkMap: false
     }
   },
   created(){
@@ -66,6 +67,16 @@ export default {
       }
       
       return result;
+    },
+    tileUrl() {
+      // 使用同一個地圖，透過 CSS filter 調整明暗
+      return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    },
+    tileAttribution() {
+      return '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+    },
+    mapClass() {
+      return this.isDarkMap ? 'dark-map-mode' : '';
     }
   },
   methods: {
@@ -75,6 +86,9 @@ export default {
     clearFilters() {
       this.selectedCounty = '';
       this.search = '';
+    },
+    toggleMapMode() {
+      this.isDarkMap = !this.isDarkMap;
     }
   }
 };
@@ -95,6 +109,12 @@ export default {
         <i class="bi bi-pin-map-fill"></i>
         <span>顯示 {{ filteredData.length }} 個觀測站</span>
       </div>
+      <div class="info-center">
+        <button class="map-mode-toggle" @click="toggleMapMode" :title="isDarkMap ? '切換一般模式' : '切換黑暗模式'">
+          <i :class="isDarkMap ? 'bi bi-sun-fill' : 'bi bi-moon-fill'"></i>
+          <span>{{ isDarkMap ? '一般模式' : '黑暗模式' }}</span>
+        </button>
+      </div>
       <div class="info-right">
         <i class="bi bi-hand-index-thumb"></i>
         <span>點按標記查看詳情</span>
@@ -102,10 +122,11 @@ export default {
     </div>
     
     <div class="map-content">
-      <div v-if="showdiv" id="map" ref="myDiv" :style="{ height: winheight - 180 + 'px' }">
+      <div v-if="showdiv" id="map" ref="myDiv" :style="{ height: winheight - 180 + 'px' }" :class="mapClass">
         <l-map ref="map" v-model:zoom="zoom" :center="[23.45889,120.9417]" :useGlobalLeaflet="false">
           <l-tile-layer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            :url="tileUrl"
+            :attribution="tileAttribution"
             layer-type="base"
             name="OpenStreetMap"
           ></l-tile-layer>
@@ -162,10 +183,11 @@ export default {
   justify-content: space-between;
   padding: 0.5rem 1rem;
   margin: 0 0.5rem 0.5rem;
-  background: rgba(30, 41, 59, 0.8);
+  background: var(--neo-panel);
   border: 1px solid var(--neo-border);
   border-radius: 10px;
   font-size: 0.8rem;
+  box-shadow: var(--neo-shadow);
 }
 
 .info-left, .info-right {
@@ -179,8 +201,50 @@ export default {
   color: var(--neo-accent);
 }
 
+.info-center {
+  display: flex;
+  align-items: center;
+}
+
+.map-mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  background: var(--neo-bg);
+  border: 1px solid var(--neo-border);
+  border-radius: 20px;
+  color: var(--neo-text);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.map-mode-toggle:hover {
+  background: var(--neo-accent);
+  color: white;
+  border-color: var(--neo-accent);
+  transform: scale(1.02);
+}
+
+.map-mode-toggle i {
+  font-size: 0.85rem;
+}
+
+.map-mode-toggle .bi-moon-fill {
+  color: #6366f1;
+}
+
+.map-mode-toggle .bi-sun-fill {
+  color: #f59e0b;
+}
+
+.map-mode-toggle:hover i {
+  color: white;
+}
+
 .info-right i {
-  color: #fbbf24;
+  color: #f59e0b;
 }
 
 .map-content {
@@ -193,16 +257,32 @@ export default {
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--neo-shadow-lg);
   border: 1px solid var(--neo-border);
 }
 
-/* Dark mode map filter */
-.leaflet-layer,
-.leaflet-control-zoom-in,
-.leaflet-control-zoom-out,
-.leaflet-control-attribution {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+/* Dark map mode - 反轉色彩深色效果（保留中文標籤） */
+.dark-map-mode .leaflet-tile-pane {
+  filter: invert(100%) hue-rotate(180deg) brightness(0.95) contrast(0.9);
+}
+
+.dark-map-mode .leaflet-control-zoom a {
+  background-color: rgba(40, 40, 50, 0.9);
+  color: #e0e0e0;
+  border-color: rgba(80, 80, 90, 0.8);
+}
+
+.dark-map-mode .leaflet-control-zoom a:hover {
+  background-color: rgba(60, 60, 70, 0.95);
+}
+
+.dark-map-mode .leaflet-control-attribution {
+  background-color: rgba(30, 30, 40, 0.8);
+  color: #aaa;
+}
+
+.dark-map-mode .leaflet-control-attribution a {
+  color: #8ab4f8;
 }
 
 /* Marker color classes */
@@ -242,15 +322,14 @@ export default {
 .leaflet-popup-content-wrapper {
   padding: 0;
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  background: rgba(15, 23, 42, 0.9);
-  backdrop-filter: blur(12px);
+  box-shadow: var(--neo-shadow-lg);
+  background: var(--neo-panel);
   border: 1px solid var(--neo-border);
   color: var(--neo-text);
 }
 
 .leaflet-popup-tip {
-  background: rgba(15, 23, 42, 0.9);
+  background: var(--neo-panel);
 }
 
 .map-popup-weather-block {
@@ -271,19 +350,16 @@ export default {
   border-radius: 8px;
   padding: 20px;
   border: 1px solid var(--neo-border);
-  backdrop-filter: blur(12px);
 }
 
 .loading-container h5 {
   margin-top: 15px;
   line-height: 1.5;
   color: var(--neo-text);
-  text-shadow: 0 0 10px var(--neo-glow);
 }
 
 .spinner-border {
-  color: var(--neo-accent);
-  box-shadow: 0 0 15px var(--neo-glow);
+  color: var(--neo-accent) !important;
   border-radius: 50%;
 }
 
@@ -336,6 +412,11 @@ export default {
     border-radius: 8px;
   }
   
+  .map-mode-toggle {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+  }
+  
   #map {
     border-radius: 0;
     box-shadow: none;
@@ -379,6 +460,19 @@ export default {
   
   .info-right {
     display: none;
+  }
+  
+  .map-mode-toggle {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.65rem;
+  }
+  
+  .map-mode-toggle span {
+    display: none;
+  }
+  
+  .map-mode-toggle i {
+    font-size: 0.9rem;
   }
   
   .map-content {
