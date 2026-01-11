@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <!-- Logo -->
       <router-link class="navbar-brand" to="/">
-        <h5><i class="bi bi-umbrella-fill"></i> WeatherVue</h5>
+        <h5><i class="bi bi-umbrella-fill"></i> TWeather</h5>
       </router-link>
       
       <!-- 搜尋篩選區（首頁和地圖頁顯示） -->

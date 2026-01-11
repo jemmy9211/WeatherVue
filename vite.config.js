@@ -5,14 +5,14 @@ import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/WeatherVue/',
+  base: '/TWeather/',
   plugins: [
     vue(),
     VitePWA({
       manifest: {
-        name: 'WeatherVue',
-        short_name: 'WeatherVue',
-        description: 'WeatherApp made by vue'
+        name: 'TWeather',
+        short_name: 'TWeather',
+        description: 'TWeather made by vue'
       }
     })
   ],
