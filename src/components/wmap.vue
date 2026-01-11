@@ -1,7 +1,6 @@
 <script>
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer, LMarker, LControlZoom, LIcon, LPopup, LControl } from "@vue-leaflet/vue-leaflet";
-import ico from "../assets/location-pin.png"
+import { LMap, LTileLayer, LMarker, LControlZoom, LIcon, LPopup, LControl, LCircleMarker } from "@vue-leaflet/vue-leaflet";
 import axios from 'axios'
 import NavBar from './NavBar.vue';
 const apiKey = 'CWA-FAC637E3-79B2-4800-B15D-9E19F7BB350B';
@@ -15,6 +14,7 @@ export default {
     LIcon,
     LPopup,
     LControl,
+    LCircleMarker,
     NavBar
   },
   props:[],
@@ -22,14 +22,12 @@ export default {
     return {
       data: null,
       zoom: 8,
-      iconUrl: ico,
       showdiv: false,
       showmap: false,
       currentlocationx: '',
       currentlocationy: '',
-      iconSize: 32,
+      circleRadius: 8,
       winheight: 0,
-      markerColors: ['blue', 'red', 'green', 'orange', 'yellow', 'purple'],
       selectedCounty: '',
       search: '',
       isDarkMap: false
@@ -80,8 +78,21 @@ export default {
     }
   },
   methods: {
-    getMarkerColor(station, index) {
-      return this.markerColors[index % this.markerColors.length];
+    getMarkerColor(station) {
+      const temp = parseFloat(station.WeatherElement?.AirTemperature);
+      
+      // 無效溫度顯示灰色
+      if (isNaN(temp) || temp === -99) {
+        return '#9ca3af';
+      }
+      
+      // 根據溫度範圍返回顏色
+      if (temp <= 10) return '#3b82f6';      // 冷 - 藍色
+      if (temp <= 15) return '#06b6d4';      // 涼 - 青色
+      if (temp <= 20) return '#22c55e';      // 舒適 - 綠色
+      if (temp <= 25) return '#84cc16';      // 溫暖 - 黃綠色
+      if (temp <= 30) return '#f97316';      // 熱 - 橙色
+      return '#ef4444';                       // 很熱 - 紅色
     },
     clearFilters() {
       this.selectedCounty = '';
@@ -131,17 +142,16 @@ export default {
             name="OpenStreetMap"
           ></l-tile-layer>
           
-          <l-marker 
+          <l-circle-marker 
             v-for="(x, index) in filteredData" 
             :key="index"
             :lat-lng="[x.GeoInfo.Coordinates[0].StationLatitude, x.GeoInfo.Coordinates[0].StationLongitude]"
+            :radius="circleRadius"
+            :color="getMarkerColor(x)"
+            :fill-color="getMarkerColor(x)"
+            :fill-opacity="0.8"
+            :weight="2"
           >
-            <l-icon
-              :icon-url="iconUrl"
-              :icon-size="[iconSize, iconSize]"
-              :icon-anchor="[iconSize/2, iconSize]"
-              :class-name="'marker-' + getMarkerColor(x, index)"
-            ></l-icon>
             <l-popup>
               <weather-block 
                 class="map-popup-weather-block" 
@@ -150,8 +160,46 @@ export default {
                 :inPopup="true"
               />
             </l-popup>
-          </l-marker>
+          </l-circle-marker>
         </l-map>
+        
+        <!-- 溫度圖例 -->
+        <div class="temp-legend">
+          <div class="legend-title">
+            <i class="bi bi-thermometer-half"></i>
+            溫度圖例
+          </div>
+          <div class="legend-items">
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #ef4444;"></span>
+              <span class="legend-label">&gt; 30°C 很熱</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #f97316;"></span>
+              <span class="legend-label">26-30°C 熱</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #84cc16;"></span>
+              <span class="legend-label">21-25°C 溫暖</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #22c55e;"></span>
+              <span class="legend-label">16-20°C 舒適</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #06b6d4;"></span>
+              <span class="legend-label">11-15°C 涼</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #3b82f6;"></span>
+              <span class="legend-label">≤ 10°C 冷</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot" style="background: #9ca3af;"></span>
+              <span class="legend-label">無資料</span>
+            </div>
+          </div>
+        </div>
       </div>
       
       <div v-else class="loading-container">
@@ -259,6 +307,63 @@ export default {
   overflow: hidden;
   box-shadow: var(--neo-shadow-lg);
   border: 1px solid var(--neo-border);
+  position: relative;
+}
+
+/* 溫度圖例樣式 */
+.temp-legend {
+  position: absolute;
+  bottom: 30px;
+  right: 10px;
+  background: var(--neo-panel, rgba(255, 255, 255, 0.95));
+  border: 1px solid var(--neo-border, #e0e0e0);
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  font-size: 0.75rem;
+  backdrop-filter: blur(8px);
+}
+
+.legend-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  color: var(--neo-text, #333);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--neo-border, #e0e0e0);
+}
+
+.legend-title i {
+  color: var(--neo-accent, #6366f1);
+}
+
+.legend-items {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.legend-label {
+  color: var(--neo-text, #555);
+  white-space: nowrap;
 }
 
 /* Dark map mode - 反轉色彩深色效果（保留中文標籤） */
