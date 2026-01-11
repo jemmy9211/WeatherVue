@@ -64,7 +64,7 @@
 
   <footer class="glass-footer">
     <div class="container text-center">
-      <small>Copyright &copy; 2023 jemmy9211 Website</small><br>
+      <small>Copyright &copy; 2023 <a href="https://jemmy9211.github.io/" target="_blank" rel="noopener noreferrer">jemmy9211</a> Website</small><br>
       <small>資料來自中華民國氣象局</small>
     </div>
   </footer>
