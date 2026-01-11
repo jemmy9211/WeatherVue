@@ -1,5 +1,5 @@
 export default defineConfig({
-    base: '/WeatherVue/',
+    base: '/TWeather/',
     plugins: [
       vue()
     ]

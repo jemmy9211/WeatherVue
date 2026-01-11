@@ -1,8 +1,8 @@
-# WeatherVue
+# TWeather
 
 ## Introduction
 
-WeatherVue is a web application that integrates with the public API provided by the Central Weather Bureau of the Republic of China (Taiwan). Utilizing the data offered by this API, the application employs advanced visualization techniques to enhance the accessibility of complex weather data for users. The project leverages Vue, Bootstrap, and Leaflet technologies, facilitating the rapid and practical development of the web interface.
+TWeather is a web application that integrates with the public API provided by the Central Weather Bureau of the Republic of China (Taiwan). Utilizing the data offered by this API, the application employs advanced visualization techniques to enhance the accessibility of complex weather data for users. The project leverages Vue, Bootstrap, and Leaflet technologies, facilitating the rapid and practical development of the web interface.
 
 ## Features
 
@@ -82,7 +82,7 @@ WeatherVue is a web application that integrates with the public API provided by 
 - **Environment Variables**: Make sure to restart the dev server after modifying the `.env` file
 - **CORS**: The CWA API should work with proper authentication; if you encounter CORS issues, verify your API key is correct
 
-Project GitHub Page Link: [WeatherVue GitHub Page](https://jemmy9211.github.io/WeatherVue/)
+Project GitHub Page Link: [TWeather GitHub Page](https://jemmy9211.github.io/TWeather/)
 
 Please note that the Central Weather Bureau recently upgraded to the Meteorological Agency (CWA - Central Weather Administration). Last updated on 2023/10/11 by Jemmy at Selab.
 

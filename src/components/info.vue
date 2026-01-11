@@ -4,7 +4,7 @@
     <div class="container py-5">
       <!-- Header Section -->
       <div class="header-section text-center mb-5 animate__animated animate__fadeIn">
-        <h1 class="display-4 fw-bold mb-3">WeatherVue</h1>
+        <h1 class="display-4 fw-bold mb-3">TWeather</h1>
         <div class="col-lg-8 mx-auto">
           <p class="lead mb-4">
             A modern web application that visualizes weather data from Taiwan's Central Weather Bureau.
@@ -18,7 +18,7 @@
         <div class="col-lg-10">
           <div class="info-card">
             <p class="info-text">
-              WeatherVue integrates with the public API provided by the Central Weather Bureau of the Republic of China (Taiwan). 
+              TWeather integrates with the public API provided by the Central Weather Bureau of the Republic of China (Taiwan). 
               The application employs advanced visualization techniques to enhance the accessibility of complex weather data, 
               utilizing Vue, Bootstrap, and Leaflet technologies.
             </p>
