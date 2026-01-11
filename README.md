@@ -47,7 +47,7 @@ TWeather is a web application that integrates with the public API provided by th
 1. **Clone the repository**
    ```bash
    git clone https://github.com/jemmy9211/WeatherVue.git
-   cd TWeather
+   cd WeatherVue
    ```
 
 2. **Install dependencies**
