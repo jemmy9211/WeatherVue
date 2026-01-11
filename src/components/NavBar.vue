@@ -29,9 +29,9 @@
       
       <!-- 導航連結 -->
       <div class="nav-links">
-        <router-link class="nav-btn" to="/"><i class="bi bi-house-fill"></i><span>首頁</span></router-link>
+        <router-link class="nav-btn" to="/"><i class="bi bi-map-fill"></i><span>首頁</span></router-link>
+        <router-link class="nav-btn" to="/locations"><i class="bi bi-geo-alt-fill"></i><span>地點</span></router-link>
         <router-link class="nav-btn" to="/rader"><i class="bi bi-radar"></i><span>雷達</span></router-link>
-        <router-link class="nav-btn" to="/wmap"><i class="bi bi-map-fill"></i><span>地圖</span></router-link>
         <router-link class="nav-btn" to="/info"><i class="bi bi-info-circle-fill"></i><span>關於</span></router-link>
       </div>
     </div>
@@ -241,22 +241,12 @@ export default {
 /* Responsive */
 @media (max-width: 992px) {
   .container-fluid {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.5rem;
   }
   
-  .navbar-brand {
-    order: 1;
-  }
-  
-  .nav-links {
-    order: 2;
-  }
-  
   .search-filter-group {
-    order: 3;
-    max-width: 100%;
-    flex-basis: 100%;
+    display: none;
   }
   
   .nav-btn span {
